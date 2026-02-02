@@ -77,7 +77,7 @@ export const Hero = () => {
               {/* Main image container */}
               <div className="relative">
                 <img
-                  src="https://new.refineplasticsurgery.co.ke/wp-content/uploads/2024/04/banner-1.png"
+                  src="/src/assets/REFINE/banner-1.png"
                   alt="Cosmetic surgery consultation"
                   className="w-full max-w-sm md:max-w-md mx-auto"
                 />
@@ -94,7 +94,7 @@ export const Hero = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-accent-gradient opacity-80" />
                 <img
-                  src="https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/banner-side.jpg"
+                  src="/src/assets/REFINE/banner-side.jpeg"
                   alt="Happy client"
                   className="w-full h-48 md:h-56 lg:h-64 object-cover mix-blend-overlay"
                 />

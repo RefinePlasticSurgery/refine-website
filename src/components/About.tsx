@@ -32,7 +32,7 @@ export const About = () => {
           >
             <div className="relative rounded-2xl md:rounded-3xl overflow-hidden">
               <img
-                src="https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/about-35.jpg"
+                src="/src/assets/REFINE/about-35.jpeg"
                 alt="Dr. Andrew Onyino"
                 className="w-full h-[350px] md:h-[450px] lg:h-[500px] object-cover"
               />

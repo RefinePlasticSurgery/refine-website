@@ -4,19 +4,19 @@ import { Button } from "@/components/ui/button";
 const posts = [
   {
     title: "Reach Your Ideal Body Contour with a Body Lift",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2025/02/Breast-Augmentation-1.jpg",
+    image: "/src/assets/REFINE/Breast-Augmentation-1.jpeg",
     date: "17 Feb, 2025",
     author: "Refine Plastic Surgery",
   },
   {
     title: "The Power of a Tummy Tuck",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2025/02/power-of-tummy-tuck.jpg",
+    image: "/src/assets/REFINE/power-of-tummy-tuck.jpeg",
     date: "17 Feb, 2025",
     author: "Refine Plastic Surgery",
   },
   {
     title: "Tips for Your First Time with Fillers",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2025/02/fillers.jpg",
+    image: "/src/assets/REFINE/fillers.jpeg",
     date: "08 Feb, 2025",
     author: "Refine Plastic Surgery",
   },

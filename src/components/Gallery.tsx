@@ -2,12 +2,12 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const galleryImages = [
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/07/skin-tag-removal.jpg",
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/07/lipoabdominoplasty-2.jpg",
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/07/breast-reduction-2.jpg",
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/07/breast-reduction.jpg",
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/09/Mommy-Makeover.jpg",
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/09/Breast-Implants.jpg",
+  "/src/assets/REFINE/skin-tag-removal.jpeg",
+  "/src/assets/REFINE/lipoabdominoplasty-2.jpeg",
+  "/src/assets/REFINE/breast-reduction-2.jpeg",
+  "/src/assets/REFINE/breast-reduction.jpeg",
+  "/src/assets/REFINE/Mommy-Makeover.jpeg",
+  "/src/assets/REFINE/Breast-Implants.jpeg",
 ];
 
 export const Gallery = () => {
