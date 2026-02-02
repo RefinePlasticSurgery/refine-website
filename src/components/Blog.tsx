@@ -4,19 +4,19 @@ import { Button } from "@/components/ui/button";
 const posts = [
   {
     title: "Reach Your Ideal Body Contour with a Body Lift",
-    image: "/src/assets/REFINE/Breast-Augmentation-1.jpeg",
+    image: new URL("../assets/REFINE/Breast-Augmentation-1.jpeg", import.meta.url).href,
     date: "17 Feb, 2025",
     author: "Refine Plastic Surgery",
   },
   {
     title: "The Power of a Tummy Tuck",
-    image: "/src/assets/REFINE/power-of-tummy-tuck.jpeg",
+    image: new URL("../assets/REFINE/power-of-tummy-tuck.jpeg", import.meta.url).href,
     date: "17 Feb, 2025",
     author: "Refine Plastic Surgery",
   },
   {
     title: "Tips for Your First Time with Fillers",
-    image: "/src/assets/REFINE/fillers.jpeg",
+    image: new URL("../assets/REFINE/fillers.jpeg", import.meta.url).href,
     date: "08 Feb, 2025",
     author: "Refine Plastic Surgery",
   },

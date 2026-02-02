@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import aboutImage from "../assets/REFINE/about-35.jpeg";
 import { Button } from "@/components/ui/button";
 
 const stats = [

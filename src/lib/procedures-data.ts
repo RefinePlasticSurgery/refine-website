@@ -1,9 +1,14 @@
+import facialImage from "../assets/REFINE/facial.jpeg";
+import bodyContouringImage from "../assets/REFINE/body-contouring.jpeg";
+import breastImage from "../assets/REFINE/breast.jpeg";
+import hairImage from "../assets/REFINE/hair.webp";
+
 export const procedures = [
   {
     id: "facial",
     slug: "facial-procedures",
     name: "Facial Procedures",
-    image: "/src/assets/REFINE/facial.jpeg",
+    image: facialImage,
     description: "Rejuvenate your face with our expert facial procedures including facelifts, rhinoplasty, and more.",
     fullDescription: "Our facial procedures are designed to help you achieve a more youthful, refreshed appearance. Whether you're looking to address signs of aging, reshape your nose, or enhance your facial features, our expert surgeons use the latest techniques to deliver natural-looking results.",
     features: ["Facelift & Neck Lift", "Rhinoplasty", "Blepharoplasty", "Brow Lift", "Chin Augmentation"],
@@ -18,7 +23,7 @@ export const procedures = [
     id: "body",
     slug: "body-contouring",
     name: "Body Contouring",
-    image: "/src/assets/REFINE/body-contouring.jpeg",
+    image: bodyContouringImage,
     description: "Achieve your ideal body shape with liposuction, tummy tucks, and body lift procedures.",
     fullDescription: "Body contouring procedures help you achieve the silhouette you've always wanted. Our surgeons specialize in removing excess fat and skin, tightening muscles, and reshaping specific areas of your body for a more toned and proportionate appearance.",
     features: ["Liposuction", "Tummy Tuck", "Body Lift", "Arm Lift", "Thigh Lift"],
@@ -33,7 +38,7 @@ export const procedures = [
     id: "breast",
     slug: "breast-surgery",
     name: "Breast Surgery",
-    image: "/src/assets/REFINE/breast.jpeg",
+    image: breastImage,
     description: "Enhance your silhouette with breast augmentation, reduction, or lift procedures.",
     fullDescription: "Our breast surgery options are tailored to meet your individual goals, whether you want to enhance, reduce, or lift your breasts. Using the latest surgical techniques and implant options, we help you achieve beautiful, natural-looking results.",
     features: ["Breast Augmentation", "Breast Reduction", "Breast Lift", "Breast Reconstruction", "Gynecomastia"],
@@ -48,7 +53,7 @@ export const procedures = [
     id: "skin",
     slug: "skin-and-hair",
     name: "Skin & Hair",
-    image: "/src/assets/REFINE/hair.webp",
+    image: hairImage,
     description: "Restore your natural beauty with skin treatments and hair restoration solutions.",
     fullDescription: "Our skin and hair treatments address a wide range of concerns, from acne scars and sun damage to hair loss. Using advanced technologies and proven techniques, we help you achieve healthier, more radiant skin and fuller, thicker hair.",
     features: ["Chemical Peels", "Laser Treatments", "Skin Tightening", "PRP Therapy", "Scar Revision"],
@@ -63,7 +68,7 @@ export const procedures = [
     id: "hair",
     slug: "hair-transplants",
     name: "Hair Transplants",
-    image: "/src/assets/REFINE/hair.webp",
+    image: hairImage,
     description: "Advanced hair transplant techniques for natural-looking, permanent results.",
     fullDescription: "Hair loss can significantly impact your confidence and self-image. Our advanced hair transplant procedures use state-of-the-art techniques to restore your hairline and density, giving you natural-looking, permanent results.",
     features: ["FUE Transplant", "FUT Transplant", "Hairline Restoration", "Beard Transplant", "Eyebrow Restoration"],

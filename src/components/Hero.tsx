@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import bannerImage from "../assets/REFINE/banner-1.png";
+import bannerSideImage from "../assets/REFINE/banner-side.jpeg";
 
 export const Hero = () => {
   const handleBookClick = () => {
