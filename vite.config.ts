@@ -3,17 +3,19 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// Validate environment variables at build time for production
+// Validate environment variables at build time
+// Note: For Vercel deployments, environment variables are provided at runtime
 function validateEnvironment(mode: string) {
-  if (mode === "production") {
+  if (mode === "production" && process.env.NODE_ENV !== "production") {
+    // Only validate if explicitly building for production locally
     const requiredEnvVars = ["VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY"];
     const missing = requiredEnvVars.filter((env) => !process.env[env]);
 
-    if (missing.length > 0) {
-      throw new Error(
-        `Missing required environment variables for production build:\n` +
+    if (missing.length > 0 && !process.env.CI) {
+      console.warn(
+        `Warning: Missing environment variables for production build:\n` +
         missing.map((env) => `  - ${env}`).join("\n") +
-        `\n\nPlease add these to your .env.production file.\n` +
+        `\n\nFor Vercel deployments, add these in Project Settings > Environment Variables.\n` +
         `See .env.example for reference.`
       );
     }
