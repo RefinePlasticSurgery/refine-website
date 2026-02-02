@@ -1,13 +1,19 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import skinTagImage from "@/assets/REFINE/skin-tag-removal.jpeg";
+import lipoImage from "@/assets/REFINE/lipoabdominoplasty-2.jpeg";
+import breastRed2Image from "@/assets/REFINE/breast-reduction-2.jpeg";
+import breastRedImage from "@/assets/REFINE/breast-reduction.jpeg";
+import mommyMakeoverImage from "@/assets/REFINE/Mommy-Makeover.jpeg";
+import breastImplantsImage from "@/assets/REFINE/Breast-Implants.jpeg";
 
 const galleryImages = [
-  new URL("../assets/REFINE/skin-tag-removal.jpeg", import.meta.url).href,
-  new URL("../assets/REFINE/lipoabdominoplasty-2.jpeg", import.meta.url).href,
-  new URL("../assets/REFINE/breast-reduction-2.jpeg", import.meta.url).href,
-  new URL("../assets/REFINE/breast-reduction.jpeg", import.meta.url).href,
-  new URL("../assets/REFINE/Mommy-Makeover.jpeg", import.meta.url).href,
-  new URL("../assets/REFINE/Breast-Implants.jpeg", import.meta.url).href,
+  skinTagImage,
+  lipoImage,
+  breastRed2Image,
+  breastRedImage,
+  mommyMakeoverImage,
+  breastImplantsImage,
 ];
 
 export const Gallery = () => {
