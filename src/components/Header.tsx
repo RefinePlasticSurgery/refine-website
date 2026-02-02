@@ -83,7 +83,7 @@ export const Header = () => {
     }`}>
       {/* Top bar */}
       <div className="border-b border-border/50">
-        <div className="container flex items-center justify-between py-2 text-sm">
+        <div className="container flex items-center justify-between py-3 md:py-4 text-sm">
           <p className="hidden md:block text-muted-foreground font-body">
             We understand that each patient is unique{" "}
             <Link to="/about" className="text-foreground font-medium hover:text-primary transition-colors">
@@ -104,7 +104,7 @@ export const Header = () => {
       </div>
 
       {/* Main navigation */}
-      <div className="container flex items-center justify-between py-3 md:py-4">
+      <div className="container flex items-center justify-between py-4 md:py-5">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Refine Plastic & Aesthetic Surgery Centre" className="h-16 md:h-20 w-auto" />
