@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Contact } from "@/components/Contact";
 import { useEffect } from "react";
@@ -17,7 +15,6 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="pt-28 md:pt-32 lg:pt-36 pb-0">
         <div className="container mb-12 md:mb-16">
           {/* Back button */}
@@ -38,7 +35,6 @@ const ContactPage = () => {
         </div>
         <Contact />
       </main>
-      <Footer />
       <WhatsAppButton />
     </div>
   );

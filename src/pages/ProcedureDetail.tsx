@@ -2,8 +2,6 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { getProcedureBySlug, procedures } from "@/lib/procedures-data";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,7 +26,6 @@ const ProcedureDetail = () => {
   if (!procedure) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
           <div className="container text-center">
             <h1 className="font-display text-4xl text-foreground mb-4">Procedure Not Found</h1>
@@ -40,7 +37,6 @@ const ProcedureDetail = () => {
             </Link>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -48,7 +44,6 @@ const ProcedureDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
           <div className="container">
             <Skeleton className="h-8 w-32 mb-8" />
@@ -216,7 +211,6 @@ const ProcedureDetail = () => {
           </motion.div>
         </div>
       </main>
-      <Footer />
       <WhatsAppButton />
     </div>
   );

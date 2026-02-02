@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useEffect } from "react";
 
@@ -16,7 +14,6 @@ const TermsOfService = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Header />
       <main className="pt-28 md:pt-32 pb-20 md:pb-24 flex-grow">
         <div className="container max-w-3xl px-4 md:px-6">
           {/* Back button */}
@@ -73,7 +70,6 @@ const TermsOfService = () => {
           </motion.div>
         </div>
       </main>
-      <Footer />
       <WhatsAppButton />
     </div>
   );

@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useEffect } from "react";
 
@@ -40,7 +38,6 @@ const NewsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
@@ -110,7 +107,6 @@ const NewsPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
       <WhatsAppButton />
     </div>
   );
