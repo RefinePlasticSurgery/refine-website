@@ -1,7 +1,7 @@
-import facialImage from "../assets/REFINE/facial.jpeg";
-import bodyContouringImage from "../assets/REFINE/body-contouring.jpeg";
-import breastImage from "../assets/REFINE/breast.jpeg";
-import hairImage from "../assets/REFINE/hair.webp";
+import facialImage from "@/assets/REFINE/facial.jpeg";
+import bodyContouringImage from "@/assets/REFINE/body-contouring.jpeg";
+import breastImage from "@/assets/REFINE/breast.jpeg";
+import hairImage from "@/assets/REFINE/hair.webp";
 
 export const procedures = [
   {
