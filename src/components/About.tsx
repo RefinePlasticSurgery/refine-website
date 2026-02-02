@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import aboutImage from "../assets/REFINE/about-35.jpeg";
+import aboutImage from "@/assets/REFINE/about-35.jpeg";
 import { Button } from "@/components/ui/button";
 
 const stats = [
@@ -33,7 +33,7 @@ export const About = () => {
           >
             <div className="relative rounded-2xl md:rounded-3xl overflow-hidden">
               <img
-                src="/src/assets/REFINE/about-35.jpeg"
+                src={aboutImage}
                 alt="Dr. Andrew Onyino"
                 className="w-full h-[350px] md:h-[450px] lg:h-[500px] object-cover"
               />

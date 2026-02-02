@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import bannerImage from "../assets/REFINE/banner-1.png";
-import bannerSideImage from "../assets/REFINE/banner-side.jpeg";
+import bannerImage from "@/assets/REFINE/banner-1.png";
+import bannerSideImage from "@/assets/REFINE/banner-side.jpeg";
 
 export const Hero = () => {
   const handleBookClick = () => {
@@ -79,7 +79,7 @@ export const Hero = () => {
               {/* Main image container */}
               <div className="relative">
                 <img
-                  src="/src/assets/REFINE/banner-1.png"
+                  src={bannerImage}
                   alt="Cosmetic surgery consultation"
                   className="w-full max-w-sm md:max-w-md mx-auto"
                 />
@@ -96,7 +96,7 @@ export const Hero = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-accent-gradient opacity-80" />
                 <img
-                  src="/src/assets/REFINE/banner-side.jpeg"
+                  src={bannerSideImage}
                   alt="Happy client"
                   className="w-full h-48 md:h-56 lg:h-64 object-cover mix-blend-overlay"
                 />
