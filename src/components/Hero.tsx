@@ -95,13 +95,13 @@ export const Hero = () => {
                   className="hidden md:block max-w-xs pt-8"
                 >
                   <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-large h-64 md:h-80 lg:h-96">
-                    <div className="absolute inset-0 bg-accent-gradient opacity-80 z-20" />
                     <img
                       src={bannerSideImage}
                       alt="Happy client"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover relative z-10"
                     />
-                    <div className="absolute inset-0 hexagon-pattern z-20" />
+                    <div className="absolute inset-0 bg-accent-gradient opacity-20 z-20 pointer-events-none" />
+                    <div className="absolute inset-0 hexagon-pattern opacity-10 z-20 pointer-events-none" />
                   </div>
                 </motion.div>
               </div>
