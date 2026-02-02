@@ -16,17 +16,17 @@ export const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-hero-gradient pt-32 md:pt-36 lg:pt-40 pb-16 md:pb-20 overflow-hidden">
-      <div className="container relative z-10 pb-0">
+    <section className="relative min-h-screen bg-hero-gradient pt-28 md:pt-32 lg:pt-36 overflow-hidden">
+      <div className="container relative z-10 pb-12 md:pb-16">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8 md:space-y-10 text-center lg:text-left"
+            className="space-y-6 md:space-y-8 text-center lg:text-left"
           >
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium leading-tight text-foreground">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight text-foreground">
               Your Confidence with{" "}
               <span className="text-gradient-pink">Cosmetic</span>{" "}
               Expertise
@@ -38,7 +38,7 @@ export const Hero = () => {
               client's unique journey.
             </p>
             
-            <div className="flex items-center justify-center lg:justify-start gap-4 pt-6 md:pt-8">
+            <div className="flex items-center justify-center lg:justify-start gap-4">
               <Button 
                 onClick={handleBookClick}
                 className="bg-navy hover:bg-navy-light text-primary-foreground rounded-full px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-body group"
@@ -51,7 +51,7 @@ export const Hero = () => {
             </div>
 
             {/* Client avatars */}
-            <div className="flex items-center justify-center lg:justify-start gap-4 pt-8 md:pt-10">
+            <div className="flex items-center justify-center lg:justify-start gap-4 pt-4">
               <div className="flex -space-x-3">
                 {[1, 2, 3].map((i) => (
                   <div
