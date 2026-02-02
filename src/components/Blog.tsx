@@ -1,26 +1,27 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import breastAugImage from "@/assets/REFINE/Breast-Augmentation-1.jpeg";
 import tummyTuckImage from "@/assets/REFINE/power-of-tummy-tuck.jpeg";
 import fillersImage from "@/assets/REFINE/fillers.jpeg";
 
 const posts = [
   {
-    title: "Reach Your Ideal Body Contour with a Body Lift",
+    title: "Advanced 3D Imaging Technology in Plastic Surgery",
     image: breastAugImage,
-    date: "17 Feb, 2025",
+    date: "03 Feb, 2026",
     author: "Refine Plastic Surgery",
   },
   {
-    title: "The Power of a Tummy Tuck",
+    title: "Post-Surgical Care: Your Complete Recovery Guide",
     image: tummyTuckImage,
-    date: "17 Feb, 2025",
+    date: "28 Jan, 2026",
     author: "Refine Plastic Surgery",
   },
   {
-    title: "Tips for Your First Time with Fillers",
+    title: "Winter Skincare Routine for Post-Surgery Patients",
     image: fillersImage,
-    date: "08 Feb, 2025",
+    date: "22 Jan, 2026",
     author: "Refine Plastic Surgery",
   },
 ];
@@ -45,40 +46,43 @@ export const Blog = () => {
               for Your <span className="text-primary">Aesthetic Journey</span>
             </h2>
           </div>
-          <Button className="bg-navy hover:bg-navy-light text-primary-foreground rounded-full px-6 md:px-8 py-5 md:py-6 font-body w-fit">
-            View All
-          </Button>
+          <Link to="/news">
+            <Button className="bg-navy hover:bg-navy-light text-primary-foreground rounded-full px-6 md:px-8 py-5 md:py-6 font-body w-fit">
+              View All
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Blog Grid */}
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
           {posts.map((post, index) => (
-            <motion.article
-              key={post.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-card rounded-2xl md:rounded-3xl overflow-hidden shadow-soft group cursor-pointer"
-            >
-              <div className="relative overflow-hidden aspect-video">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-              <div className="p-4 md:p-6">
-                <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground font-body mb-2 md:mb-3">
-                  <span className="truncate">By {post.author}</span>
-                  <span>•</span>
-                  <span className="whitespace-nowrap">{post.date}</span>
+            <Link key={post.title} to="/news" className="block">
+              <motion.article
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-card rounded-2xl md:rounded-3xl overflow-hidden shadow-soft group cursor-pointer h-full"
+              >
+                <div className="relative overflow-hidden">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
-                <h3 className="font-display text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
-              </div>
-            </motion.article>
+                <div className="p-4 md:p-6">
+                  <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground font-body mb-2 md:mb-3">
+                    <span className="truncate">By {post.author}</span>
+                    <span>•</span>
+                    <span className="whitespace-nowrap">{post.date}</span>
+                  </div>
+                  <h3 className="font-display text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
+                </div>
+              </motion.article>
+            </Link>
           ))}
         </div>
       </div>

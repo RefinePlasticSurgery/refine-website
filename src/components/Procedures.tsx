@@ -61,37 +61,36 @@ export const Procedures = () => {
               enhancement, and more to enhance your natural beauty and confidence.
             </p>
             
-            <AnimatePresence mode="wait" key={activeTab}>
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-4"
-              >
-                <p className="font-body text-foreground font-medium text-lg">
-                  {activeProc?.description}
-                </p>
-                
-                {/* Features list */}
-                <ul className="space-y-2">
-                  {activeProc?.features.map((feature, index) => (
-                    <motion.li
-                      key={feature}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center gap-3 font-body text-muted-foreground"
-                    >
-                      <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-primary" />
-                      </span>
-                      {feature}
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-            </AnimatePresence>
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-4"
+            >
+              <p className="font-body text-foreground font-medium text-lg">
+                {activeProc?.description}
+              </p>
+              
+              {/* Features list */}
+              <ul className="space-y-2">
+                {activeProc?.features.map((feature, index) => (
+                  <motion.li
+                    key={feature}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center gap-3 font-body text-muted-foreground"
+                  >
+                    <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-primary" />
+                    </span>
+                    {feature}
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
 
             <Link to={`/procedures/${activeProc?.slug}`}>
               <Button 
@@ -105,44 +104,44 @@ export const Procedures = () => {
 
           {/* Images Grid */}
           <div className="grid grid-cols-2 gap-3 md:gap-4 order-1 lg:order-2">
-            <AnimatePresence mode="wait" key={activeTab}>
-              {procedures.slice(0, 4).map((proc, index) => (
-                <motion.div
-                  key={proc.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className={`relative rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group aspect-square ${
-                    index === 0 ? "col-span-2" : ""
-                  }`}
-                  onClick={() => setActiveTab(proc.id)}
-                >
-                  <img
-                    src={proc.image}
-                    alt={proc.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className={`absolute inset-0 transition-opacity duration-300 ${
-                    activeTab === proc.id 
-                      ? "bg-primary/40" 
-                      : "bg-navy/40 group-hover:bg-navy/60"
-                  }`} />
-                  <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 font-body text-xs md:text-sm text-card font-medium">
-                    {proc.name}
-                  </p>
-                  {activeTab === proc.id && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute top-3 right-3 w-6 h-6 rounded-full bg-primary flex items-center justify-center"
-                    >
-                      <Check className="w-4 h-4 text-primary-foreground" />
-                    </motion.div>
-                  )}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {procedures.slice(0, 4).map((proc, index) => (
+              <motion.div
+                key={proc.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                className={`relative rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group aspect-square ${
+                  index === 0 ? "col-span-2" : ""
+                }`}
+                onClick={() => setActiveTab(proc.id)}
+              >
+                <img
+                  src={proc.image}
+                  alt={proc.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className={`absolute inset-0 transition-opacity duration-300 ${
+                  activeTab === proc.id 
+                    ? "bg-primary/40" 
+                    : "bg-navy/40 group-hover:bg-navy/60"
+                }`} />
+                <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 font-body text-xs md:text-sm text-card font-medium">
+                  {proc.name}
+                </p>
+                {activeTab === proc.id && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="absolute top-3 right-3 w-6 h-6 rounded-full bg-primary flex items-center justify-center"
+                  >
+                    <Check className="w-4 h-4 text-primary-foreground" />
+                  </motion.div>
+                )}
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>

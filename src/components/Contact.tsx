@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import DOMPurify from "isomorphic-dompurify";
 import { Button } from "@/components/ui/button";
@@ -83,6 +83,27 @@ export const Contact = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof AppointmentFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitAttempts, setSubmitAttempts] = useState(0);
+
+  // Check for pre-selected procedure from URL or location state
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const procedureParam = urlParams.get('procedure');
+    
+    if (procedureParam) {
+      setFormData(prev => ({
+        ...prev,
+        procedure: decodeURIComponent(procedureParam)
+      }));
+    }
+    
+    // Also check if there's a location state (from navigation)
+    if (window.history.state?.procedure) {
+      setFormData(prev => ({
+        ...prev,
+        procedure: window.history.state.procedure
+      }));
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -199,13 +220,76 @@ export const Contact = () => {
     }
   };
 
-  const procedures = [
-    "Facial Procedures",
-    "Body Contouring",
-    "Breast Surgery",
-    "Skin & Hair",
-    "Hair Transplants",
-    "Other",
+  const procedureCategories = [
+    {
+      category: "Breast Procedures",
+      procedures: [
+        "Breast Reduction",
+        "Breast Augmentation (Implants)",
+        "Breast Augmentation (Fat Transfer)",
+        "Mastopexy (Breast Lift)",
+        "Nipple Revision",
+        "Breast Reconstruction",
+        "Breast Asymmetry Correction"
+      ]
+    },
+    {
+      category: "Body Contouring",
+      procedures: [
+        "360° Liposuction",
+        "Abdominoplasty (Tummy Tuck)",
+        "Lipoabdominoplasty",
+        "Brazilian Butt Lift (BBL)",
+        "Body Lift",
+        "Thigh Lift",
+        "Arm Lift (Brachioplasty)",
+        "General Liposuction"
+      ]
+    },
+    {
+      category: "Facial Procedures",
+      procedures: [
+        "Rhinoplasty",
+        "Face Lift",
+        "Mini Face Lift",
+        "Brow Lift",
+        "Eyelid Surgery",
+        "Lip Procedures"
+      ]
+    },
+    {
+      category: "Gynecomastia",
+      procedures: [
+        "Gynecomastia Treatment (Lipo + Excision)",
+        "Gynecomastia Treatment (Lipo Only)",
+        "Gynecomastia Treatment (Excision Only)"
+      ]
+    },
+    {
+      category: "Hair & Skin",
+      procedures: [
+        "Hair Transplant",
+        "Beard Hair Transplant",
+        "Laser Hair Removal",
+        "PRP Stem Cell Treatment",
+        "Nanofat Facial Rejuvenation",
+        "Morpheus 8 Treatment"
+      ]
+    },
+    {
+      category: "Intimate Procedures",
+      procedures: [
+        "Penile Enlargement",
+        "Penile PRP Treatment",
+        "Vaginoplasty"
+      ]
+    },
+    {
+      category: "Other Procedures",
+      procedures: [
+        "Other/Consultation Only"
+      ]
+    }
   ];
 
   return (
@@ -247,7 +331,6 @@ export const Contact = () => {
                 <div>
                   <h4 className="font-display text-lg font-medium text-foreground">Call Us</h4>
                   <p className="font-body text-muted-foreground">(+255) 793 145 167</p>
-                  <p className="font-body text-muted-foreground">(+254) 722 123 456</p>
                 </div>
               </motion.div>
 
@@ -395,21 +478,32 @@ export const Contact = () => {
 
                 <div>
                   <label className="font-body text-sm text-foreground mb-2 block">
-                    Procedure of Interest
+                    Procedure of Interest *
                   </label>
                   <select
                     name="procedure"
                     value={formData.procedure}
                     onChange={handleChange}
-                    className="w-full h-12 px-3 rounded-md bg-secondary border-0 font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    required
+                    className={`w-full h-12 px-3 rounded-md bg-secondary border-0 font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${errors.procedure ? 'ring-2 ring-destructive' : ''}`}
                   >
                     <option value="">Select a procedure</option>
-                    {procedures.map((proc) => (
-                      <option key={proc} value={proc}>
-                        {proc}
-                      </option>
+                    {procedureCategories.map((category) => (
+                      <optgroup key={category.category} label={category.category}>
+                        {category.procedures.map((proc) => (
+                          <option key={proc} value={proc}>
+                            {proc}
+                          </option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
+                  {errors.procedure && (
+                    <p className="text-destructive text-xs mt-1 font-body">{errors.procedure}</p>
+                  )}
+                  <p className="font-body text-xs text-muted-foreground mt-2">
+                    Can't find your procedure? Select "Other/Consultation Only" and specify in the message field.
+                  </p>
                 </div>
 
                 <div>

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { ArrowLeft, Award, Users, Clock, Heart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,24 +14,38 @@ const AboutPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
-        <div className="container">
-          {/* Back button */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="mb-8"
-          >
-            <Button
-              variant="ghost"
-              onClick={() => navigate(-1)}
-              className="gap-2 text-muted-foreground hover:text-foreground"
+    <>
+      <Helmet>
+        <title>About Refine Plastic Surgery | Leading Cosmetic Surgery Centre Tanzania</title>
+        <meta name="description" content="Learn about Refine Plastic & Aesthetic Surgery Centre in Tanzania. Our expert team provides world-class cosmetic procedures with personalized care and exceptional results." />
+        <meta name="keywords" content="about plastic surgery Tanzania, cosmetic surgery centre, aesthetic surgery experts, Tanzania cosmetic surgeons" />
+        <link rel="canonical" href="https://refineplasticsurgerytz.com/about" />
+        <meta property="og:title" content="About Refine Plastic Surgery | Leading Cosmetic Surgery Centre Tanzania" />
+        <meta property="og:description" content="Learn about our expert team and world-class cosmetic procedures at Refine Plastic Surgery Centre in Tanzania." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://refineplasticsurgerytz.com/about" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="About Refine Plastic Surgery | Leading Cosmetic Surgery Centre Tanzania" />
+        <meta name="twitter:description" content="Learn about our expert team and world-class cosmetic procedures at Refine Plastic Surgery Centre in Tanzania." />
+      </Helmet>
+      <div className="min-h-screen bg-background">
+        <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
+          <div className="container">
+            {/* Back button */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="mb-8"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </Button>
-          </motion.div>
+              <Button
+                variant="ghost"
+                onClick={() => navigate(-1)}
+                className="gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+            </motion.div>
 
           {/* Hero */}
           <motion.div
@@ -110,11 +125,12 @@ const AboutPage = () => {
               </Button>
             </Link>
           </motion.div>
+            </div>
+          </main>
+          <WhatsAppButton />
         </div>
-      </main>
-      <WhatsAppButton />
-    </div>
-  );
-};
-
-export default AboutPage;
+      </>
+    );
+  };
+  
+  export default AboutPage;

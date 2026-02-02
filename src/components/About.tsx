@@ -91,7 +91,7 @@ export const About = () => {
             </p>
             
             <p className="font-body text-muted-foreground leading-relaxed">
-              Founded by renowned plastic surgeon <span className="text-foreground font-semibold">Dr. Andrew Onyino</span> & <span className="text-foreground font-semibold">Dr. Donald Madekwe</span>, a reconstruction and plastic surgeon, 
+              Founded by renowned <span className="text-foreground font-semibold">Dr. Donald Madekwe</span> a reconstruction and plastic surgeon & <span className="text-foreground font-semibold">Dr. Andrew Onyino</span> plastic surgeon, 
               our practice is dedicated to delivering exceptional results and empowering 
               our patients to look and feel their best, inside and out.
             </p>

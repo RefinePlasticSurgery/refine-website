@@ -1,18 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useScrollToSection } from "@/hooks/useScrollToSection";
 import bannerImage from "@/assets/REFINE/banner-1.png";
 import bannerSideImage from "@/assets/REFINE/banner-side.jpeg";
 
 export const Hero = () => {
+  const { scrollToSection } = useScrollToSection();
+  
   const handleBookClick = () => {
-    const element = document.querySelector("#contact");
-    if (element) {
-      const headerOffset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-    }
+    scrollToSection('contact', 100);
   };
 
   return (
@@ -26,10 +23,10 @@ export const Hero = () => {
             transition={{ duration: 0.8 }}
             className="space-y-6 md:space-y-8 text-center lg:text-left"
           >
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight text-foreground">
-              Your Confidence with{" "}
-              <span className="text-gradient-pink">Cosmetic</span>{" "}
-              Expertise
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-foreground">
+              <span className="font-bold">Your Confidence</span> with{" "}
+              <span className="text-gradient-pink font-bold">Cosmetic</span>{" "}
+              <span className="font-bold">Expertise</span>
             </h1>
             
             <p className="font-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto lg:mx-0">

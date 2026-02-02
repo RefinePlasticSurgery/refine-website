@@ -5,13 +5,20 @@ import { Button } from "@/components/ui/button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useEffect } from "react";
 
+import drHannahImage from "@/assets/REFINE/dr-andrew.jpeg";
+import facialImage from "@/assets/REFINE/facial.jpeg";
+import bodyContouringImage from "@/assets/REFINE/body-contouring.jpeg";
+import breastImage from "@/assets/REFINE/breast.jpeg";
+import hairImage from "@/assets/REFINE/hair.webp";
+import hairWebpImage from "@/assets/REFINE/hair.webp";
+
 const galleryImages = [
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2024/04/dr-hannah.jpg",
-  "https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/facial.jpg",
-  "https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/body-contouring.jpg",
-  "https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/breast.jpg",
-  "https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/hair.jpg",
-  "https://refineplasticsurgerytz.com/wp-content/uploads/2025/08/hair.webp",
+  drHannahImage,
+  facialImage,
+  bodyContouringImage,
+  breastImage,
+  hairImage,
+  hairWebpImage,
 ];
 
 const GalleryPage = () => {

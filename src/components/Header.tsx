@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, MapPin, Menu, X, Search, ShoppingCart, ChevronDown } from "lucide-react";
+import { Phone, MapPin, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useScrollToSection } from "@/hooks/useScrollToSection";
 import logo from "@/assets/logo.png";
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { name: "Team", href: "/team" },
   { name: "Gallery", href: "/gallery" },
   { name: "News", href: "/news" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -31,6 +33,18 @@ export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { scrollToSection } = useScrollToSection();
+  
+  // Handle scrolling when component mounts if there's a hash in the URL
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && location.pathname === "/") {
+      // Remove the '#' and scroll to the element
+      const elementId = hash.substring(1);
+      // Delay slightly to ensure page is rendered
+      setTimeout(() => scrollToSection(elementId, 100), 100);
+    }
+  }, [location.pathname, scrollToSection]);
 
   // Memoized navigation handler to avoid unnecessary re-renders
   const handleNavClick = useCallback((href: string) => {
@@ -38,26 +52,22 @@ export const Header = () => {
     
     // Check if it's an anchor link on home page
     if (href.startsWith("/#")) {
-      const anchor = href.replace("/", "");
+      const anchor = href.split('#')[1]; // Extract anchor part after #
       if (location.pathname === "/") {
-        // Already on home page, just scroll
-        const element = document.querySelector(anchor);
-        if (element) {
-          const headerOffset = 100;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - headerOffset;
-          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-        }
+        // Already on home page, just scroll to section
+        scrollToSection(anchor, 100);
+        return;
       } else {
         // Navigate to home page with anchor
+        // The useScrollToSection hook will handle scrolling when page loads
         navigate(href);
+        return;
       }
-      return;
     }
     
     // Regular navigation
     navigate(href);
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, scrollToSection]);
 
   // Debounced scroll handler for better performance
   useEffect(() => {
@@ -79,7 +89,7 @@ export const Header = () => {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-card/95 backdrop-blur-md shadow-soft" : "bg-card/80 backdrop-blur-md"
+      scrolled ? "bg-background shadow-soft" : "bg-background"
     }`}>
       {/* Top bar */}
       <div className="border-b border-border/50">
@@ -107,7 +117,7 @@ export const Header = () => {
       <div className="container flex items-center justify-between py-3 md:py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Refine Plastic & Aesthetic Surgery Centre" className="h-16 md:h-20 w-auto" />
+          <img src={logo} alt="Refine Plastic & Aesthetic Surgery Centre" className="h-20 md:h-24 lg:h-28 w-auto" />
         </Link>
 
         {/* Desktop Navigation */}
@@ -156,15 +166,6 @@ export const Header = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-2 md:gap-3">
-          <button className="p-2 hover:bg-secondary rounded-full transition-colors hidden md:flex">
-            <Search className="w-5 h-5 text-foreground" />
-          </button>
-          <button className="p-2 hover:bg-secondary rounded-full transition-colors relative hidden md:flex">
-            <ShoppingCart className="w-5 h-5 text-foreground" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-primary-foreground text-[10px] rounded-full flex items-center justify-center">
-              0
-            </span>
-          </button>
           <Button 
             onClick={() => handleNavClick("/contact")}
             className="bg-primary hover:bg-pink-light text-primary-foreground rounded-full px-4 md:px-6 py-2 md:py-2.5 hidden sm:flex gap-2 text-sm"

@@ -1,14 +1,26 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://refineplasticsurgerytz.com/sitemap.xml
+
+# Crawl-delay for all bots
+Crawl-delay: 10
+
+# Specific directives for major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
-User-agent: Twitterbot
+User-agent: Slurp
 Allow: /
+Crawl-delay: 1
 
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
-Allow: /
+# Block access to sensitive files
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /supabase/

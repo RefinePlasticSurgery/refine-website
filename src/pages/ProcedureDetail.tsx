@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Check, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { getProcedureBySlug, procedures } from "@/lib/procedures-data";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
@@ -150,12 +152,30 @@ const ProcedureDetail = () => {
 
               {/* CTA */}
               <div className="pt-6">
-                <Link to="/#contact">
-                  <Button className="bg-primary hover:bg-pink-light text-primary-foreground rounded-full px-8 py-6 gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Book a Consultation
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => {
+                    // Navigate to contact section with procedure pre-selected
+                    const contactSection = document.getElementById('contact');
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: 'smooth' });
+                      // Set procedure in form after a small delay to ensure DOM is ready
+                      setTimeout(() => {
+                        const procedureSelect = document.querySelector('select[name="procedure"') as HTMLSelectElement;
+                        if (procedureSelect) {
+                          procedureSelect.value = procedure.name;
+                          procedureSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                      }, 500);
+                    } else {
+                      // If no contact section on page, navigate to contact page with procedure parameter
+                      navigate(`/contact?procedure=${encodeURIComponent(procedure.name)}`);
+                    }
+                  }}
+                  className="bg-primary hover:bg-pink-light text-primary-foreground rounded-full px-8 py-6 gap-2"
+                >
+                  <Calendar className="w-5 h-5" />
+                  Book {procedure.name} Consultation
+                </Button>
               </div>
             </motion.div>
 

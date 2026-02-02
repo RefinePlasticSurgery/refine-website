@@ -22,7 +22,10 @@ export const appointmentFormSchema = z.object({
     .min(7, { message: "Phone number must be at least 7 digits" })
     .regex(phoneRegex, { message: "Please enter a valid phone number (e.g., +255 793 145 167)" })
     .max(20, { message: "Phone number must be less than 20 characters" }),
-  procedure: z.string().optional().default(""),
+  procedure: z
+    .string()
+    .min(1, { message: "Please select a procedure of interest" })
+    .max(100, { message: "Procedure name must be less than 100 characters" }),
   date: z.string().optional().default(""),
   message: z
     .string()

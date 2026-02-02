@@ -5,17 +5,20 @@ import { Button } from "@/components/ui/button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useEffect } from "react";
 
+import drDonaldImage from "@/assets/REFINE/dr-donald.jpeg";
+import drAndrewImage from "@/assets/REFINE/dr-andrew.jpeg";
+
 const team = [
   {
     name: "Dr. Donald Madekwe",
     role: "Plastic Reconstructive and Aesthetic Surgeon",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2026/01/dr-donald-612x612-1.jpg",
+    image: drDonaldImage,
     bio: "Dr. Donald Madekwe is a highly skilled plastic reconstructive and aesthetic surgeon with extensive experience in transformative procedures.",
   },
   {
     name: "Dr. Andrew Onyino",
     role: "Plastic Surgeon",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2024/08/dr-were.jpg",
+    image: drAndrewImage,
     bio: "Dr. Andrew Onyino brings years of expertise in plastic surgery, specializing in both reconstructive and cosmetic procedures.",
   },
 ];

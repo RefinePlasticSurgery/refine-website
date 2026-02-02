@@ -34,24 +34,30 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (char) => map[char]);
 }
 
-// Simple in-memory rate limiting (for production, use Deno KV Storage)
-const requestCounts = new Map<string, { count: number; resetTime: number }>();
+// Rate limiting using timestamp tracking
+// In a production environment, use Deno KV Storage or a persistent store
+let lastResetTime = Date.now();
+let requestCount = 0;
+const MAX_REQUESTS_PER_MINUTE = 30; // Adjust based on your needs
 
-function rateLimit(clientId: string, maxRequests: number = 5, windowSeconds: number = 60): boolean {
+function rateLimit(): boolean {
   const now = Date.now();
-  const record = requestCounts.get(clientId);
-
-  if (!record || now > record.resetTime) {
-    requestCounts.set(clientId, { count: 1, resetTime: now + windowSeconds * 1000 });
+  
+  // Reset counter every minute
+  if (now - lastResetTime > 60000) {
+    lastResetTime = now;
+    requestCount = 1;
     return true;
   }
-
-  if (record.count < maxRequests) {
-    record.count++;
-    return true;
+  
+  // Check if we've exceeded the limit
+  if (requestCount >= MAX_REQUESTS_PER_MINUTE) {
+    return false;
   }
-
-  return false;
+  
+  // Increment request count
+  requestCount++;
+  return true;
 }
 
 function getCorsHeaders(origin: string | null) {
@@ -101,15 +107,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    // Get client IP for rate limiting
-    const clientIp = req.headers.get("X-Forwarded-For") ||
-                     req.headers.get("X-Client-IP") ||
-                     origin ||
-                     "unknown";
-
-    // Apply rate limiting (5 requests per 60 seconds per client)
-    if (!rateLimit(clientIp, 5, 60)) {
-      console.warn(`Rate limit exceeded for client: ${clientIp}`);
+    // Apply rate limiting (30 requests per minute globally)
+    if (!rateLimit()) {
+      console.warn("Rate limit exceeded");
       return new Response(
         JSON.stringify({ success: false, error: "Too many requests. Please try again later." }),
         { status: 429, headers: { "Content-Type": "application/json", ...cors } }

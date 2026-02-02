@@ -77,33 +77,32 @@ export const Testimonials = () => {
 
         {/* Testimonials Slider */}
         <div className="relative max-w-4xl mx-auto">
-          <AnimatePresence mode="wait" key={current}>
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              className="bg-card rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 shadow-medium"
-            >
-              <div className="flex mb-4">
-                {[...Array(testimonials[current].rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 md:w-5 md:h-5 fill-gold text-gold" />
-                ))}
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+            className="bg-card rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 shadow-medium"
+          >
+            <div className="flex mb-4">
+              {[...Array(testimonials[current].rating)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 md:w-5 md:h-5 fill-gold text-gold" />
+              ))}
+            </div>
+            <p className="font-body text-base md:text-lg lg:text-xl text-foreground leading-relaxed mb-6">
+              "{testimonials[current].text}"
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-primary to-pink-light" />
+              <div>
+                <p className="font-display text-base md:text-lg font-medium text-foreground">
+                  {testimonials[current].name}
+                </p>
+                <p className="font-body text-sm text-muted-foreground">Verified Patient</p>
               </div>
-              <p className="font-body text-base md:text-lg lg:text-xl text-foreground leading-relaxed mb-6">
-                "{testimonials[current].text}"
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-primary to-pink-light" />
-                <div>
-                  <p className="font-display text-base md:text-lg font-medium text-foreground">
-                    {testimonials[current].name}
-                  </p>
-                  <p className="font-body text-sm text-muted-foreground">Verified Patient</p>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+            </div>
+          </motion.div>
 
           {/* Navigation */}
           <div className="flex justify-center gap-4 mt-6 md:mt-8">

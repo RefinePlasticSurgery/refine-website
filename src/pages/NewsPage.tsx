@@ -5,27 +5,52 @@ import { Button } from "@/components/ui/button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useEffect } from "react";
 
+import facialImage from "@/assets/REFINE/facial.jpeg";
+import bodyContouringImage from "@/assets/REFINE/body-contouring.jpeg";
+import hairImage from "@/assets/REFINE/hair.webp";
+
 const blogPosts = [
   {
-    title: "Understanding Rhinoplasty: What to Expect",
-    excerpt: "A comprehensive guide to nose reshaping surgery and recovery process.",
-    image: "https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/facial.jpg",
-    date: "January 15, 2025",
-    category: "Facial Procedures",
+    title: "Advanced 3D Imaging Technology in Plastic Surgery",
+    excerpt: "How cutting-edge 3D imaging is revolutionizing surgical planning and patient outcomes at Refine Surgery.",
+    image: facialImage,
+    date: "February 3, 2026",
+    category: "Technology",
   },
   {
-    title: "The Rise of Non-Surgical Body Contouring",
-    excerpt: "Explore the latest non-invasive options for achieving your ideal body shape.",
-    image: "https://new.refineplasticsurgery.co.ke/wp-content/uploads/2025/07/body-contouring.jpg",
-    date: "January 10, 2025",
-    category: "Body Contouring",
+    title: "Post-Surgical Care: Your Complete Recovery Guide",
+    excerpt: "Essential tips and guidelines for optimal healing and results after your cosmetic procedure.",
+    image: bodyContouringImage,
+    date: "January 28, 2026",
+    category: "Patient Care",
   },
   {
-    title: "Hair Transplant Techniques Compared",
-    excerpt: "FUE vs FUT: Which hair restoration method is right for you?",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2025/08/hair.webp",
-    date: "January 5, 2025",
-    category: "Hair Restoration",
+    title: "Winter Skincare Routine for Post-Surgery Patients",
+    excerpt: "Specialized skincare advice for maintaining results during the colder months in Tanzania.",
+    image: hairImage,
+    date: "January 22, 2026",
+    category: "Skincare",
+  },
+  {
+    title: "Minimally Invasive Procedures: What's New in 2026",
+    excerpt: "Latest advances in non-surgical aesthetic treatments and what they mean for your beauty goals.",
+    image: bodyContouringImage,
+    date: "January 15, 2026",
+    category: "Innovations",
+  },
+  {
+    title: "Preparing for Your Consultation: What to Expect",
+    excerpt: "A complete guide to help you prepare for your initial consultation and make the most of your visit.",
+    image: facialImage,
+    date: "January 8, 2026",
+    category: "Patient Guide",
+  },
+  {
+    title: "Celebrating 5 Years of Excellence in Aesthetic Surgery",
+    excerpt: "Milestone achievements and our commitment to delivering world-class cosmetic procedures in Tanzania.",
+    image: hairImage,
+    date: "December 20, 2025",
+    category: "Company News",
   },
 ];
 
@@ -79,13 +104,14 @@ const NewsPage = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-card rounded-2xl overflow-hidden shadow-soft group"
+                className="bg-card rounded-2xl overflow-hidden shadow-soft group cursor-pointer"
+                onClick={() => console.log(`Clicked on: ${post.title}`)}
               >
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative overflow-hidden">
                   <img
                     src={post.image}
                     alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-body">
                     {post.category}
