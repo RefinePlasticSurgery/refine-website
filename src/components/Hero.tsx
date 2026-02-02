@@ -68,49 +68,64 @@ export const Hero = () => {
             </div>
           </motion.div>
 
-          {/* Right content - Images */}
-          <div className="relative mt-8 lg:mt-0 flex justify-center items-center">
-            <div className="relative w-full max-w-md">
-              {/* Main image */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative z-10 rounded-2xl md:rounded-3xl overflow-hidden"
-              >
-                <img
-                  src={bannerImage}
-                  alt="Cosmetic surgery consultation"
-                  className="w-full h-auto"
-                />
-              </motion.div>
-
-              {/* Side image with rating */}
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="absolute -bottom-6 -right-8 md:-bottom-8 md:-right-12 w-40 md:w-56 lg:w-72 rounded-2xl overflow-hidden shadow-large hidden md:block"
-              >
-                <div className="relative h-48 md:h-64 lg:h-80">
-                  <div className="absolute inset-0 bg-accent-gradient opacity-80 z-20" />
+          {/* Right content - Images and Rating */}
+          <div className="relative mt-8 lg:mt-0">
+            <div className="space-y-6">
+              {/* Images container */}
+              <div className="flex gap-4 md:gap-6 items-start justify-center lg:justify-end">
+                {/* Main image */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="flex-1 max-w-xs rounded-2xl md:rounded-3xl overflow-hidden shadow-large"
+                >
                   <img
-                    src={bannerSideImage}
-                    alt="Happy client"
-                    className="w-full h-full object-cover"
+                    src={bannerImage}
+                    alt="Cosmetic surgery consultation"
+                    className="w-full h-auto"
                   />
-                  <div className="absolute inset-0 hexagon-pattern z-20" />
-                  
-                  {/* Rating card */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-accent p-4 md:p-5 text-accent-foreground rounded-b-2xl z-30">
-                    <p className="text-xs md:text-sm font-body font-medium">4.7 Average Rating</p>
-                    <div className="flex items-center gap-1 mt-2">
+                </motion.div>
+
+                {/* Side image */}
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="hidden md:block max-w-xs pt-8"
+                >
+                  <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-large h-64 md:h-80 lg:h-96">
+                    <div className="absolute inset-0 bg-accent-gradient opacity-80 z-20" />
+                    <img
+                      src={bannerSideImage}
+                      alt="Happy client"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 hexagon-pattern z-20" />
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Rating card - Separate */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex justify-center lg:justify-end"
+              >
+                <div className="bg-card border border-border rounded-xl md:rounded-2xl p-5 md:p-6 shadow-medium max-w-xs w-full">
+                  <p className="text-sm md:text-base font-body font-semibold text-foreground">4.7 Average Rating</p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <div className="flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((i) => (
-                        <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+                        <Star key={i} className="w-4 h-4 md:w-5 md:h-5 fill-accent text-accent" />
                       ))}
                     </div>
-                    <p className="text-[10px] md:text-xs font-body mt-1 opacity-90">Review 4.7/5.0</p>
+                    <span className="text-sm text-muted-foreground">(4.7/5.0)</span>
                   </div>
+                  <p className="text-xs md:text-sm text-muted-foreground mt-3 leading-relaxed">
+                    Trusted by thousands of clients for exceptional results and personalized care.
+                  </p>
                 </div>
               </motion.div>
             </div>
