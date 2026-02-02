@@ -69,51 +69,51 @@ export const Hero = () => {
           </motion.div>
 
           {/* Right content - Images */}
-          <div className="relative mt-8 lg:mt-0">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative z-10"
-            >
-              {/* Main image container */}
-              <div className="relative">
+          <div className="relative mt-8 lg:mt-0 flex justify-center items-center">
+            <div className="relative w-full max-w-md">
+              {/* Main image */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative z-10 rounded-2xl md:rounded-3xl overflow-hidden"
+              >
                 <img
                   src={bannerImage}
                   alt="Cosmetic surgery consultation"
-                  className="w-full max-w-sm md:max-w-md mx-auto"
+                  className="w-full h-auto"
                 />
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Side image with accent */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="absolute top-0 right-0 w-36 md:w-48 lg:w-64 rounded-2xl overflow-hidden hidden md:block"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-accent-gradient opacity-80" />
-                <img
-                  src={bannerSideImage}
-                  alt="Happy client"
-                  className="w-full h-48 md:h-56 lg:h-64 object-cover mix-blend-overlay"
-                />
-                <div className="absolute inset-0 hexagon-pattern" />
-              </div>
-              
-              {/* Rating card */}
-              <div className="absolute bottom-0 left-0 right-0 bg-accent p-3 md:p-4 text-accent-foreground">
-                <p className="text-xs md:text-sm font-body font-medium">4.7 Average Rating</p>
-                <div className="flex items-center gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-current" />
-                  ))}
+              {/* Side image with rating */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="absolute -bottom-6 -right-8 md:-bottom-8 md:-right-12 w-40 md:w-56 lg:w-72 rounded-2xl overflow-hidden shadow-large hidden md:block"
+              >
+                <div className="relative h-48 md:h-64 lg:h-80">
+                  <div className="absolute inset-0 bg-accent-gradient opacity-80 z-20" />
+                  <img
+                    src={bannerSideImage}
+                    alt="Happy client"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 hexagon-pattern z-20" />
+                  
+                  {/* Rating card */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-accent p-4 md:p-5 text-accent-foreground rounded-b-2xl z-30">
+                    <p className="text-xs md:text-sm font-body font-medium">4.7 Average Rating</p>
+                    <div className="flex items-center gap-1 mt-2">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-[10px] md:text-xs font-body mt-1 opacity-90">Review 4.7/5.0</p>
+                  </div>
                 </div>
-                <p className="text-[10px] md:text-xs font-body mt-1 opacity-80">Review 4.7/5.0</p>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
