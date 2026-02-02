@@ -29,7 +29,7 @@ const ProcedureDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="pt-32 pb-16">
+        <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
           <div className="container text-center">
             <h1 className="font-display text-4xl text-foreground mb-4">Procedure Not Found</h1>
             <p className="text-muted-foreground mb-8">The procedure you're looking for doesn't exist.</p>
@@ -49,7 +49,7 @@ const ProcedureDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="pt-32 pb-16">
+        <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
           <div className="container">
             <Skeleton className="h-8 w-32 mb-8" />
             <div className="grid lg:grid-cols-2 gap-12">
@@ -74,13 +74,13 @@ const ProcedureDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-16">
+      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="mb-8"
+            className="mb-8 md:mb-12"
           >
             <Button
               variant="ghost"
@@ -92,12 +92,12 @@ const ProcedureDetail = () => {
             </Button>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-start">
             {/* Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
+              className="space-y-8 md:space-y-10"
             >
               <p className="font-body text-sm text-primary uppercase tracking-wider">
                 Procedures

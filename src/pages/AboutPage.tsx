@@ -17,7 +17,7 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-16">
+      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
           <motion.div
@@ -39,7 +39,7 @@ const AboutPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
             <p className="font-body text-sm text-primary uppercase tracking-wider mb-2">
               About Us
@@ -59,7 +59,7 @@ const AboutPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20 md:mb-24"
           >
             {[
               { icon: Users, value: "3000+", label: "Happy Clients" },
@@ -82,7 +82,7 @@ const AboutPage = () => {
             transition={{ delay: 0.3 }}
             className="prose prose-lg max-w-4xl mx-auto"
           >
-            <div className="space-y-8 text-muted-foreground font-body">
+            <div className="space-y-8 md:space-y-10 text-muted-foreground font-body">
               <p>
                 At Refine Plastic & Aesthetic Surgery Centre, we understand that each patient is unique. 
                 Our team of board-certified surgeons combines artistic vision with technical precision 
@@ -105,7 +105,7 @@ const AboutPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-center mt-16"
+            className="text-center mt-24 md:mt-28"
           >
             <Link to="/#contact">
               <Button className="bg-primary hover:bg-pink-light text-primary-foreground rounded-full px-8 py-6">

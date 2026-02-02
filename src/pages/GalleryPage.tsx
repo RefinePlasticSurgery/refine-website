@@ -26,7 +26,7 @@ const GalleryPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-16">
+      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
           <motion.div
@@ -48,7 +48,7 @@ const GalleryPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+            className="text-center mb-20 md:mb-24"
           >
             <p className="font-body text-sm text-primary uppercase tracking-wider mb-2">
               Gallery
@@ -60,7 +60,7 @@ const GalleryPage = () => {
           </motion.div>
 
           {/* Gallery Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {galleryImages.map((image, index) => (
               <motion.div
                 key={index}

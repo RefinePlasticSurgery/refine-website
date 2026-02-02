@@ -41,7 +41,7 @@ const NewsPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-16">
+      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
           <motion.div
@@ -63,7 +63,7 @@ const NewsPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+            className="text-center mb-20 md:mb-24"
           >
             <p className="font-body text-sm text-primary uppercase tracking-wider mb-2">
               News & Updates
@@ -75,7 +75,7 @@ const NewsPage = () => {
           </motion.div>
 
           {/* Blog Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {blogPosts.map((post, index) => (
               <motion.article
                 key={post.title}
@@ -94,7 +94,7 @@ const NewsPage = () => {
                     {post.category}
                   </span>
                 </div>
-                <div className="p-6">
+                <div className="p-8">
                   <p className="font-body text-sm text-muted-foreground mb-2">{post.date}</p>
                   <h3 className="font-display text-xl font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
                     {post.title}

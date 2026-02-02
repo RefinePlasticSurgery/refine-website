@@ -32,7 +32,7 @@ const TeamPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-16">
+      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
           <motion.div
@@ -54,7 +54,7 @@ const TeamPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+            className="text-center mb-20 md:mb-24"
           >
             <p className="font-body text-sm text-primary uppercase tracking-wider mb-2">
               Our Specialists
@@ -66,7 +66,7 @@ const TeamPage = () => {
           </motion.div>
 
           {/* Team Grid */}
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-20 md:mb-24">
             {team.map((member, index) => (
               <motion.div
                 key={member.name}
@@ -82,7 +82,7 @@ const TeamPage = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-6">
+                <div className="p-8 md:p-10">
                   <h3 className="font-display text-2xl font-medium text-foreground">
                     {member.name}
                   </h3>
@@ -98,7 +98,7 @@ const TeamPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-center mt-16"
+            className="text-center mt-20 md:mt-24"
           >
             <Link to="/#contact">
               <Button className="bg-primary hover:bg-pink-light text-primary-foreground rounded-full px-8 py-6">

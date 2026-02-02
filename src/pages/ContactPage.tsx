@@ -18,13 +18,13 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-16">
-        <div className="container">
+      <main className="pt-28 md:pt-32 lg:pt-36 pb-0">
+        <div className="container mb-12 md:mb-16">
           {/* Back button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="mb-8"
+            className="mb-8 md:mb-12"
           >
             <Button
               variant="ghost"
