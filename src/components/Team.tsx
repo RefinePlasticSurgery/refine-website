@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
+import drDonaldImage from "@/assets/REFINE/dr-donald.jpeg";
+import drAndrewImage from "@/assets/REFINE/dr-andrew.jpeg";
 
 const team = [
   {
     name: "Dr. Donald Madekwe",
     role: "Plastic Reconstructive and Aesthetic Surgeon",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2026/01/dr-donald-612x612-1.jpg",
+    image: drDonaldImage,
   },
   {
     name: "Dr. Andrew Onyino",
     role: "Plastic Surgeon",
-    image: "https://refineplasticsurgerytz.com/wp-content/uploads/2024/08/dr-were.jpg",
+    image: drAndrewImage,
   },
 ];
 
