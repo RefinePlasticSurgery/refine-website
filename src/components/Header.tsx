@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, MapPin, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
+import { useHeaderHeight } from "@/hooks/useHeaderHeight";
 import logo from "@/assets/logo.png";
 
 const navItems = [
@@ -31,9 +32,13 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { scrollToSection } = useScrollToSection();
+  
+  // Use the header height hook
+  useHeaderHeight();
   
   // Handle scrolling when component mounts if there's a hash in the URL
   useEffect(() => {
@@ -88,9 +93,12 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-background shadow-soft" : "bg-background"
-    }`}>
+    <header 
+      ref={headerRef}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-background shadow-soft" : "bg-background"
+      }`}
+    >
       {/* Top bar */}
       <div className="border-b border-border/50">
         <div className="container flex items-center justify-between py-2 text-sm">

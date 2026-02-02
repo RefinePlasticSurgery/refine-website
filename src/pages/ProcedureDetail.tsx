@@ -28,7 +28,7 @@ const ProcedureDetail = () => {
   if (!procedure) {
     return (
       <div className="min-h-screen bg-background">
-        <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
+        <main className="pt-[calc(var(--header-height,112px)+2rem)] md:pt-[calc(var(--header-height,128px)+2.5rem)] lg:pt-[calc(var(--header-height,144px)+3rem)] pb-20 md:pb-24">
           <div className="container text-center">
             <h1 className="font-display text-4xl text-foreground mb-4">Procedure Not Found</h1>
             <p className="text-muted-foreground mb-8">The procedure you're looking for doesn't exist.</p>
@@ -46,7 +46,7 @@ const ProcedureDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
+        <main className="pt-[calc(var(--header-height,112px)+2rem)] md:pt-[calc(var(--header-height,128px)+2.5rem)] lg:pt-[calc(var(--header-height,144px)+3rem)] pb-20 md:pb-24">
           <div className="container">
             <Skeleton className="h-8 w-32 mb-8" />
             <div className="grid lg:grid-cols-2 gap-12">
@@ -71,7 +71,7 @@ const ProcedureDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
+      <main className="pt-[calc(var(--header-height,112px)+2rem)] md:pt-[calc(var(--header-height,128px)+2.5rem)] lg:pt-[calc(var(--header-height,144px)+3rem)] pb-20 md:pb-24">
         <div className="container">
           {/* Back button */}
           <motion.div

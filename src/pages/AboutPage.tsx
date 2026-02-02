@@ -29,7 +29,7 @@ const AboutPage = () => {
         <meta name="twitter:description" content="Learn about our expert team and world-class cosmetic procedures at Refine Plastic Surgery Centre in Tanzania." />
       </Helmet>
       <div className="min-h-screen bg-background">
-        <main className="pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-24">
+        <main className="pt-[calc(var(--header-height,112px)+2rem)] md:pt-[calc(var(--header-height,128px)+2.5rem)] lg:pt-[calc(var(--header-height,144px)+3rem)] pb-20 md:pb-24">
           <div className="container">
             {/* Back button */}
             <motion.div

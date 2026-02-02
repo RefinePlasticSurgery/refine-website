@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,12 +9,19 @@ import bannerSideImage from "@/assets/REFINE/banner-side.jpeg";
 export const Hero = () => {
   const { scrollToSection } = useScrollToSection();
   
+  // Ensure header height is calculated before rendering
+  useEffect(() => {
+    // Trigger recalculation if needed
+    const event = new CustomEvent('header-height-change');
+    window.dispatchEvent(event);
+  }, []);
+  
   const handleBookClick = () => {
     scrollToSection('contact', 100);
   };
 
   return (
-    <section className="relative min-h-screen bg-hero-gradient pt-28 md:pt-32 lg:pt-36 overflow-hidden">
+    <section className="relative min-h-screen bg-hero-gradient pt-[calc(var(--header-height,112px)+2rem)] md:pt-[calc(var(--header-height,128px)+2.5rem)] lg:pt-[calc(var(--header-height,144px)+3rem)] overflow-hidden">
       <div className="container relative z-10 pb-12 md:pb-16">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left content */}

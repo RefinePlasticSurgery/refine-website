@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <main className="pt-28 md:pt-32 pb-20 md:pb-24 flex-grow">
+      <main className="pt-[calc(var(--header-height,112px)+2rem)] md:pt-[calc(var(--header-height,128px)+2.5rem)] pb-20 md:pb-24 flex-grow">
         <div className="container max-w-3xl px-4 md:px-6">
           {/* Back button */}
           <motion.div
