@@ -50,14 +50,12 @@ export const Gallery = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative rounded-xl md:rounded-2xl overflow-hidden group cursor-pointer ${
-                index === 0 || index === 5 ? "row-span-2" : ""
-              }`}
+              className="relative rounded-xl md:rounded-2xl overflow-hidden group cursor-pointer aspect-square"
             >
               <img
                 src={image}
                 alt={`Before and after transformation ${index + 1}`}
-                className="w-full h-full object-cover min-h-[150px] md:min-h-[200px] transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/40 transition-colors duration-300" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

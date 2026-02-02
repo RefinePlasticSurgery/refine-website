@@ -44,11 +44,11 @@ export const Team = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group"
             >
-              <div className="relative rounded-2xl md:rounded-3xl overflow-hidden mb-4 md:mb-6">
+              <div className="relative rounded-2xl md:rounded-3xl overflow-hidden mb-4 md:mb-6 aspect-square">
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-[300px] sm:h-[350px] md:h-[400px] object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>

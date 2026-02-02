@@ -113,8 +113,8 @@ export const Procedures = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
-                  className={`relative rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group ${
-                    index === 0 ? "col-span-2 h-36 md:h-48" : "h-32 md:h-40"
+                  className={`relative rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group aspect-square ${
+                    index === 0 ? "col-span-2" : ""
                   }`}
                   onClick={() => setActiveTab(proc.id)}
                 >

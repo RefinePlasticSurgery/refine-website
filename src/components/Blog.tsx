@@ -61,11 +61,11 @@ export const Blog = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-card rounded-2xl md:rounded-3xl overflow-hidden shadow-soft group cursor-pointer"
             >
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden aspect-video">
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-full h-48 md:h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
               <div className="p-4 md:p-6">
