@@ -125,7 +125,7 @@ export const Header = () => {
       <div className="container flex items-center justify-between py-3 md:py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Refine Plastic & Aesthetic Surgery Centre" className="h-20 md:h-24 lg:h-28 w-auto" />
+          <img src={logo} alt="Refine Plastic & Aesthetic Surgery Centre" className="h-24 md:h-28 lg:h-28 w-auto" />
         </Link>
 
         {/* Desktop Navigation */}
