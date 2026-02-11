@@ -29,17 +29,17 @@ const PricingPage = () => {
   return (
     <>
       <Helmet>
-        <title>Plastic Surgery Pricing Tanzania | Cosmetic Procedure Costs</title>
-        <meta name="description" content="Complete pricing guide for plastic surgery procedures in Tanzania. Breast augmentation, liposuction, rhinoplasty, and more. Transparent costs in TZS." />
+        <title>Plastic Surgery Pricing Inquiry Tanzania | Cosmetic Procedure Quotes</title>
+        <meta name="description" content="Request pricing information for plastic surgery procedures in Tanzania. Breast augmentation, liposuction, rhinoplasty, and more. Personalized quotes available." />
         <meta name="keywords" content="plastic surgery prices Tanzania, cosmetic surgery costs, breast augmentation price, liposuction cost Tanzania, rhinoplasty price" />
         <link rel="canonical" href="https://refineplasticsurgerytz.com/pricing" />
-        <meta property="og:title" content="Plastic Surgery Pricing Tanzania | Cosmetic Procedure Costs" />
-        <meta property="og:description" content="Complete pricing guide for plastic surgery procedures in Tanzania. Transparent costs in TZS." />
+        <meta property="og:title" content="Plastic Surgery Pricing Inquiry Tanzania | Cosmetic Procedure Quotes" />
+        <meta property="og:description" content="Request pricing information for plastic surgery procedures in Tanzania. Personalized quotes available." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://refineplasticsurgerytz.com/pricing" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Plastic Surgery Pricing Tanzania | Cosmetic Procedure Costs" />
-        <meta name="twitter:description" content="Complete pricing guide for plastic surgery procedures in Tanzania." />
+        <meta name="twitter:title" content="Plastic Surgery Pricing Inquiry Tanzania | Cosmetic Procedure Quotes" />
+        <meta name="twitter:description" content="Request pricing information for plastic surgery procedures in Tanzania." />
       </Helmet>
 
       <div className="min-h-screen bg-background">
@@ -71,15 +71,15 @@ const PricingPage = () => {
                 Transparent Pricing
               </Badge>
               <h1 className="font-display text-4xl md:text-5xl font-medium text-foreground mb-4">
-                Our <span className="text-primary">Procedure</span> Pricing
+                Our <span className="text-primary">Procedure</span> Inquiry
               </h1>
               <p className="font-body text-lg text-muted-foreground max-w-3xl mx-auto">
-                Comprehensive pricing for all our cosmetic and plastic surgery procedures. 
-                All prices include pre-operative consultation, surgical procedure, and post-operative care.
+                Request pricing information for all our cosmetic and plastic surgery procedures. 
+                Contact us for personalized quotes including pre-operative consultation, surgical procedure, and post-operative care.
               </p>
               <div className="mt-6 text-sm text-muted-foreground">
-                <p>Prices are in Tanzanian Shillings (TZS) and include all surgical procedures, pre-operative consultation, and post-operative care.</p>
-                <p className="mt-2">Prices subject to change based on individual needs and requirements.</p>
+                <p>Contact us for personalized pricing information. All procedures include pre-operative consultation, surgical procedure, and post-operative care.</p>
+                <p className="mt-2">Pricing varies based on individual needs and requirements.</p>
               </div>
             </motion.div>
 
@@ -131,7 +131,7 @@ const PricingPage = () => {
                       <thead>
                         <tr className="border-b">
                           <th className="text-left py-4 px-4 font-body text-muted-foreground">Procedure</th>
-                          <th className="text-right py-4 px-4 font-body text-muted-foreground">Price (TZS)</th>
+                          <th className="text-center py-4 px-4 font-body text-muted-foreground">Price Inquiry</th>
                           <th className="text-center py-4 px-4 font-body text-muted-foreground">Details</th>
                         </tr>
                       </thead>
@@ -147,7 +147,7 @@ const PricingPage = () => {
                             <td className="py-4 px-4">
                               <div className="font-body font-medium text-foreground">{item.name}</div>
                             </td>
-                            <td className="py-4 px-4 text-right">
+                            <td className="py-4 px-4 text-center">
                               <div className="font-body font-semibold text-foreground">
                                 {formatPrice(item.price)}
                               </div>
@@ -216,7 +216,7 @@ const PricingPage = () => {
                                 {formatPrice(procedure.price)}
                               </div>
                               <div className="text-sm text-muted-foreground mt-1">
-                                Tanzanian Shillings (TZS)
+                                Submit inquiry for detailed pricing
                               </div>
                             </div>
                           </div>

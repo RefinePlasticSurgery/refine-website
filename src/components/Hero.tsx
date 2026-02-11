@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
-import bannerImage from "@/assets/REFINE/banner-1.png";
-import bannerSideImage from "@/assets/REFINE/banner-side.jpeg";
+import bodySculptureImage from "@/assets/REFINE/body sculpture.png";
 
 export const Hero = () => {
   const { scrollToSection } = useScrollToSection();
@@ -73,49 +72,30 @@ export const Hero = () => {
             </div>
           </motion.div>
 
-          {/* Right content - Images and Rating */}
+          {/* Right content - Single Image and Rating */}
           <div className="relative mt-8 lg:mt-0">
             <div className="space-y-6">
-              {/* Images container */}
-              <div className="flex gap-4 md:gap-6 items-start justify-center lg:justify-end">
-                {/* Main image */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="flex-1 max-w-xs rounded-2xl md:rounded-3xl overflow-hidden shadow-large"
-                >
+              {/* Main image */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="flex justify-center lg:justify-end"
+              >
+                <div className="max-w-md rounded-2xl md:rounded-3xl overflow-hidden shadow-large">
                   <img
-                    src={bannerImage}
-                    alt="Cosmetic surgery consultation"
-                    className="w-full h-auto"
+                    src={bodySculptureImage}
+                    alt="Body sculpture transformation"
+                    className="w-full h-auto object-cover"
                   />
-                </motion.div>
-
-                {/* Side image */}
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="hidden md:block max-w-xs pt-8"
-                >
-                  <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-large h-64 md:h-80 lg:h-96">
-                    <img
-                      src={bannerSideImage}
-                      alt="Happy client"
-                      className="w-full h-full object-cover relative z-10"
-                    />
-                    <div className="absolute inset-0 bg-accent-gradient opacity-20 z-20 pointer-events-none" />
-                    <div className="absolute inset-0 hexagon-pattern opacity-10 z-20 pointer-events-none" />
-                  </div>
-                </motion.div>
-              </div>
+                </div>
+              </motion.div>
 
               {/* Rating card - Separate */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
                 className="flex justify-center lg:justify-end"
               >
                 <div className="bg-card border border-border rounded-xl md:rounded-2xl p-5 md:p-6 shadow-medium max-w-xs w-full">
