@@ -66,7 +66,7 @@ function getCorsHeaders(origin: string | null) {
 
   return {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, authorization",
+    "Access-Control-Allow-Headers": "Content-Type, authorization, x-client-info, apikey, Accept, Accept-Language",
     "Access-Control-Allow-Origin": isAllowed ? origin : "",
   };
 }
