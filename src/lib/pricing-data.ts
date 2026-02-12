@@ -4,7 +4,6 @@ export interface PricingItem {
   price: number;
   category: string;
   description?: string;
-  duration?: string;
   includes?: string[];
 }
 
@@ -18,7 +17,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Breast Procedures",
     description: "Reduction of breast size to alleviate physical discomfort and improve body proportions",
-    duration: "2-3 hours",
     includes: [
       "Pre-operative consultation",
       "Surgical procedure",
@@ -33,7 +31,6 @@ export const pricingData: PricingItem[] = [
     price: 10890000,
     category: "Breast Procedures",
     description: "Enhancement of breast size and shape using silicone or saline implants",
-    duration: "1-2 hours",
     includes: [
       "Implant selection consultation",
       "Surgical procedure",
@@ -48,7 +45,6 @@ export const pricingData: PricingItem[] = [
     price: 7920000,
     category: "Breast Procedures",
     description: "Natural breast enhancement using fat harvested from other body areas",
-    duration: "2-3 hours",
     includes: [
       "Liposuction procedure",
       "Fat processing and transfer",
@@ -63,7 +59,6 @@ export const pricingData: PricingItem[] = [
     price: 9900000,
     category: "Breast Procedures",
     description: "Lifting and reshaping of sagging breasts to a more youthful position",
-    duration: "2-3 hours",
     includes: [
       "Pre-operative consultation",
       "Surgical procedure",
@@ -78,7 +73,6 @@ export const pricingData: PricingItem[] = [
     price: 2376000,
     category: "Breast Procedures",
     description: "Correction of nipple shape, size, or position issues",
-    duration: "1-2 hours",
     includes: [
       "Consultation",
       "Surgical procedure",
@@ -92,7 +86,6 @@ export const pricingData: PricingItem[] = [
     price: 11880000,
     category: "Breast Procedures",
     description: "Reconstruction using tissue from nearby areas while maintaining blood supply",
-    duration: "4-6 hours",
     includes: [
       "Comprehensive consultation",
       "Surgical procedure",
@@ -107,7 +100,6 @@ export const pricingData: PricingItem[] = [
     price: 15840000,
     category: "Breast Procedures",
     description: "Advanced reconstruction using tissue from distant body parts with microsurgery",
-    duration: "6-8 hours",
     includes: [
       "Extensive pre-operative planning",
       "Complex surgical procedure",
@@ -122,7 +114,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Breast Procedures",
     description: "Correction of uneven breast size or shape for better symmetry",
-    duration: "2-3 hours",
     includes: [
       "Detailed consultation",
       "Surgical correction",
@@ -136,7 +127,6 @@ export const pricingData: PricingItem[] = [
     price: 7920000,
     category: "Breast Procedures",
     description: "Enhancement using patient's own fat for natural results",
-    duration: "2-3 hours",
     includes: [
       "Liposuction procedure",
       "Fat processing",
@@ -152,7 +142,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Gynecomastia",
     description: "Complete removal of excess breast tissue in men using both liposuction and excision",
-    duration: "1-2 hours",
     includes: [
       "Consultation",
       "Combined procedure",
@@ -167,7 +156,6 @@ export const pricingData: PricingItem[] = [
     price: 4356000,
     category: "Gynecomastia",
     description: "Removal of excess fat tissue using liposuction technique",
-    duration: "1-1.5 hours",
     includes: [
       "Consultation",
       "Liposuction procedure",
@@ -181,7 +169,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Gynecomastia",
     description: "Surgical removal of excess glandular tissue",
-    duration: "1.5-2 hours",
     includes: [
       "Consultation",
       "Surgical excision",
@@ -197,7 +184,6 @@ export const pricingData: PricingItem[] = [
     price: 12870000,
     category: "Liposuction",
     description: "Comprehensive body contouring around the entire midsection",
-    duration: "3-4 hours",
     includes: [
       "Pre-operative consultation",
       "Full 360° procedure",
@@ -212,7 +198,6 @@ export const pricingData: PricingItem[] = [
     price: 13860000,
     category: "Liposuction",
     description: "Revision procedure for previous liposuction results",
-    duration: "3-4 hours",
     includes: [
       "Detailed consultation",
       "Revision procedure",
@@ -226,7 +211,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Liposuction",
     description: "Targeted fat removal from the front abdominal area",
-    duration: "1-2 hours",
     includes: [
       "Consultation",
       "Liposuction procedure",
@@ -240,7 +224,6 @@ export const pricingData: PricingItem[] = [
     price: 4950000,
     category: "Liposuction",
     description: "Contouring of inner thigh area for smoother silhouette",
-    duration: "1-2 hours",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -253,7 +236,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Liposuction",
     description: "Comprehensive back fat removal for improved body shape",
-    duration: "2-3 hours",
     includes: [
       "Full back treatment",
       "Post-operative care",
@@ -267,7 +249,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Liposuction",
     description: "Arm contouring to eliminate loose skin and excess fat",
-    duration: "2-3 hours",
     includes: [
       "Surgical procedure",
       "Post-operative care",
@@ -281,7 +262,6 @@ export const pricingData: PricingItem[] = [
     price: 2970000,
     category: "Liposuction",
     description: "Removal of submental fat for defined jawline",
-    duration: "1 hour",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -294,7 +274,6 @@ export const pricingData: PricingItem[] = [
     price: 3960000,
     category: "Liposuction",
     description: "Leg contouring for improved proportions",
-    duration: "2-3 hours",
     includes: [
       "Liposuction procedure",
       "Post-operative care",
@@ -307,7 +286,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Liposuction",
     description: "Standard liposuction procedure for various body areas",
-    duration: "1-2 hours",
     includes: [
       "Consultation",
       "Liposuction procedure",
@@ -323,7 +301,6 @@ export const pricingData: PricingItem[] = [
     price: 11880000,
     category: "Abdominal Procedures",
     description: "Complete tummy tuck to remove excess skin and tighten muscles",
-    duration: "3-4 hours",
     includes: [
       "Comprehensive consultation",
       "Full tummy tuck procedure",
@@ -338,7 +315,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Abdominal Procedures",
     description: "Limited tummy tuck for minor corrections",
-    duration: "2-3 hours",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -352,7 +328,6 @@ export const pricingData: PricingItem[] = [
     price: 12870000,
     category: "Abdominal Procedures",
     description: "Combination of liposuction and tummy tuck for optimal results",
-    duration: "4-5 hours",
     includes: [
       "Combined procedure",
       "Extended post-operative care",
@@ -366,7 +341,6 @@ export const pricingData: PricingItem[] = [
     price: 14850000,
     category: "Abdominal Procedures",
     description: "Revision of previous tummy tuck and liposuction procedures",
-    duration: "5-6 hours",
     includes: [
       "Extensive revision surgery",
       "Intensive post-operative care",
@@ -380,7 +354,6 @@ export const pricingData: PricingItem[] = [
     price: 8910000,
     category: "Abdominal Procedures",
     description: "Removal of excess skin and fat hanging over the pubic area",
-    duration: "3-4 hours",
     includes: [
       "Surgical procedure",
       "Post-operative care",
@@ -394,7 +367,6 @@ export const pricingData: PricingItem[] = [
     price: 13860000,
     category: "Abdominal Procedures",
     description: "Advanced tummy tuck with vertical and horizontal incisions",
-    duration: "4-5 hours",
     includes: [
       "Complex surgical procedure",
       "Extended post-operative care",
@@ -410,7 +382,6 @@ export const pricingData: PricingItem[] = [
     price: 12870000,
     category: "Body Contouring",
     description: "Brazilian Butt Lift using fat transfer for enhanced curves",
-    duration: "3-4 hours",
     includes: [
       "Liposuction procedure",
       "Fat processing and transfer",
@@ -425,7 +396,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Body Contouring",
     description: "Hip enhancement using patient's own fat for natural curves",
-    duration: "2-3 hours",
     includes: [
       "Liposuction",
       "Fat transfer procedure",
@@ -439,7 +409,6 @@ export const pricingData: PricingItem[] = [
     price: 4356000,
     category: "Body Contouring",
     description: "Enhancement of calf muscles for improved leg proportions",
-    duration: "1-2 hours",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -452,7 +421,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Body Contouring",
     description: "Removal of excess skin and fat from thigh area",
-    duration: "3-4 hours",
     includes: [
       "Surgical procedure",
       "Post-operative care",
@@ -466,7 +434,6 @@ export const pricingData: PricingItem[] = [
     price: 15840000,
     category: "Body Contouring",
     description: "Comprehensive lower body lift for multiple areas",
-    duration: "5-6 hours",
     includes: [
       "Extensive surgical procedure",
       "Intensive post-operative care",
@@ -480,7 +447,6 @@ export const pricingData: PricingItem[] = [
     price: 1980000,
     category: "Body Contouring",
     description: "Correction of excess skin folds after body contouring procedures",
-    duration: "1 hour",
     includes: [
       "Minor surgical procedure",
       "Post-operative care"
@@ -494,7 +460,6 @@ export const pricingData: PricingItem[] = [
     price: 16830000,
     category: "Face & Head",
     description: "Comprehensive facial rejuvenation to reduce signs of aging",
-    duration: "4-5 hours",
     includes: [
       "Extensive consultation",
       "Full face lift procedure",
@@ -509,7 +474,6 @@ export const pricingData: PricingItem[] = [
     price: 11880000,
     category: "Face & Head",
     description: "Limited facelift for targeted rejuvenation",
-    duration: "2-3 hours",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -522,7 +486,6 @@ export const pricingData: PricingItem[] = [
     price: 8910000,
     category: "Face & Head",
     description: "Elevation of brow area to reduce forehead wrinkles",
-    duration: "2-3 hours",
     includes: [
       "Surgical procedure",
       "Post-operative care",
@@ -535,7 +498,6 @@ export const pricingData: PricingItem[] = [
     price: 15840000,
     category: "Face & Head",
     description: "Nose reshaping for improved appearance and function",
-    duration: "2-3 hours",
     includes: [
       "Detailed consultation",
       "Surgical procedure",
@@ -550,7 +512,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Face & Head",
     description: "Narrowing of nostrils for better nasal proportions",
-    duration: "1-2 hours",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -563,7 +524,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Face & Head",
     description: "Correction of deviated septum to improve breathing",
-    duration: "1-2 hours",
     includes: [
       "Surgical procedure",
       "Post-operative care",
@@ -576,7 +536,6 @@ export const pricingData: PricingItem[] = [
     price: 3564000,
     category: "Face & Head",
     description: "Upper eyelid correction to remove excess skin",
-    duration: "1-2 hours",
     includes: [
       "Procedure",
       "Post-operative care",
@@ -589,7 +548,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Face & Head",
     description: "Lower eyelid treatment for bags and dark circles",
-    duration: "1-2 hours",
     includes: [
       "Surgical procedure",
       "Post-operative care",
@@ -602,7 +560,6 @@ export const pricingData: PricingItem[] = [
     price: 3564000,
     category: "Face & Head",
     description: "Various lip enhancement and correction procedures",
-    duration: "1-2 hours",
     includes: [
       "Consultation",
       "Surgical procedure",
@@ -617,7 +574,6 @@ export const pricingData: PricingItem[] = [
     price: 7920000,
     category: "Hair & Skin",
     description: "Follicular Unit Extraction (FUE) for natural hair restoration",
-    duration: "4-6 hours",
     includes: [
       "Comprehensive consultation",
       "Hair transplant procedure",
@@ -632,7 +588,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Hair & Skin",
     description: "Beard enhancement using hair transplant techniques",
-    duration: "3-4 hours",
     includes: [
       "Consultation",
       "Transplant procedure",
@@ -646,7 +601,6 @@ export const pricingData: PricingItem[] = [
     price: 1584000,
     category: "Hair & Skin",
     description: "Laser treatment for permanent hair reduction",
-    duration: "30-60 minutes",
     includes: [
       "Session treatment",
       "Post-treatment care instructions"
@@ -658,7 +612,6 @@ export const pricingData: PricingItem[] = [
     price: 792000,
     category: "Hair & Skin",
     description: "Platelet-rich plasma treatment for skin rejuvenation",
-    duration: "1 hour",
     includes: [
       "Blood processing",
       "Injection treatment",
@@ -671,7 +624,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Hair & Skin",
     description: "Facial rejuvenation using processed fat cells",
-    duration: "2-3 hours",
     includes: [
       "Liposuction procedure",
       "Fat processing",
@@ -685,7 +637,6 @@ export const pricingData: PricingItem[] = [
     price: 3564000,
     category: "Hair & Skin",
     description: "Targeted nanofat treatment for specific areas",
-    duration: "1-2 hours",
     includes: [
       "Fat harvesting",
       "Processing and injection",
@@ -698,7 +649,6 @@ export const pricingData: PricingItem[] = [
     price: 3564000,
     category: "Hair & Skin",
     description: "Radiofrequency microneedling for skin tightening",
-    duration: "2 sessions of 45 minutes each",
     includes: [
       "Two treatment sessions",
       "Post-treatment care",
@@ -713,7 +663,6 @@ export const pricingData: PricingItem[] = [
     price: 6930000,
     category: "Intimate Procedures",
     description: "Surgical enhancement for improved size and confidence",
-    duration: "2-3 hours",
     includes: [
       "Comprehensive consultation",
       "Surgical procedure",
@@ -727,7 +676,6 @@ export const pricingData: PricingItem[] = [
     price: 1584000,
     category: "Intimate Procedures",
     description: "Platelet-rich plasma treatment for enhanced function",
-    duration: "1 hour",
     includes: [
       "Blood processing",
       "Injection treatment",
@@ -740,7 +688,6 @@ export const pricingData: PricingItem[] = [
     price: 5940000,
     category: "Intimate Procedures",
     description: "Vaginal tightening and rejuvenation procedure",
-    duration: "2-3 hours",
     includes: [
       "Detailed consultation",
       "Surgical procedure",

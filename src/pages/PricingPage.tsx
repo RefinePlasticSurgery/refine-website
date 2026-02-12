@@ -229,12 +229,6 @@ const PricingPage = () => {
                             </h4>
                             <div className="space-y-2">
                               <div className="flex justify-between">
-                                <span className="font-body">Duration:</span>
-                                <span className="font-body font-medium text-foreground">
-                                  {procedure.duration || '1-3 hours'}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
                                 <span className="font-body">Category:</span>
                                 <span className="font-body text-muted-foreground">
                                   {procedure.category}
