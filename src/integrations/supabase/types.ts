@@ -14,7 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_users: {
+        Row: {
+          id: string
+          email: string
+          role: string
+          created_at: string
+          last_login: string | null
+        }
+        Insert: {
+          id?: string
+          email: string
+          role?: string
+          created_at?: string
+          last_login?: string | null
+        }
+        Update: {
+          id?: string
+          email?: string
+          role?: string
+          created_at?: string
+          last_login?: string | null
+        }
+      }
+      appointments: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          phone: string
+          procedure: string
+          preferred_date: string | null
+          message: string | null
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          phone: string
+          procedure: string
+          preferred_date?: string | null
+          message?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          phone?: string
+          procedure?: string
+          preferred_date?: string | null
+          message?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      blog_posts: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          excerpt: string | null
+          content: string | null
+          image_url: string | null
+          status: string
+          published_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          excerpt?: string | null
+          content?: string | null
+          image_url?: string | null
+          status?: string
+          published_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          excerpt?: string | null
+          content?: string | null
+          image_url?: string | null
+          status?: string
+          published_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      gallery_images: {
+        Row: {
+          id: string
+          title: string | null
+          image_url: string
+          category: string | null
+          before_after: boolean
+          display_order: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title?: string | null
+          image_url: string
+          category?: string | null
+          before_after?: boolean
+          display_order?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string | null
+          image_url?: string
+          category?: string | null
+          before_after?: boolean
+          display_order?: number | null
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -153,3 +280,20 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
+// Export admin types for convenience
+export type AdminUser = Database['public']['Tables']['admin_users']['Row']
+export type NewAdminUser = Database['public']['Tables']['admin_users']['Insert']
+export type UpdateAdminUser = Database['public']['Tables']['admin_users']['Update']
+
+export type Appointment = Database['public']['Tables']['appointments']['Row']
+export type NewAppointment = Database['public']['Tables']['appointments']['Insert']
+export type UpdateAppointment = Database['public']['Tables']['appointments']['Update']
+
+export type BlogPost = Database['public']['Tables']['blog_posts']['Row']
+export type NewBlogPost = Database['public']['Tables']['blog_posts']['Insert']
+export type UpdateBlogPost = Database['public']['Tables']['blog_posts']['Update']
+
+export type GalleryImage = Database['public']['Tables']['gallery_images']['Row']
+export type NewGalleryImage = Database['public']['Tables']['gallery_images']['Insert']
+export type UpdateGalleryImage = Database['public']['Tables']['gallery_images']['Update']

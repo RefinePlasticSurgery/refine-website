@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AuthProvider } from "@/admin/hooks/useAuth";
+import { ProtectedRoute } from "@/admin/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProcedureDetail from "./pages/ProcedureDetail";
@@ -17,6 +19,14 @@ import ContactPage from "./pages/ContactPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import PricingPage from "./pages/PricingPage";
+import { AdminLogin } from "@/admin/pages/AdminLogin";
+import { AdminDashboard } from "@/admin/pages/AdminDashboard";
+import { Appointments } from "@/admin/pages/Appointments";
+import { Blog } from "@/admin/pages/Blog";
+import { Gallery } from "@/admin/pages/Gallery";
+import { Team } from "@/admin/pages/Team";
+import { Analytics } from "@/admin/pages/Analytics";
+import { Settings } from "@/admin/pages/Settings";
 
 // Configure Query Client with sensible defaults for production
 const queryClient = new QueryClient({
@@ -43,24 +53,84 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/team" element={<TeamPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/procedures/:slug" element={<ProcedureDetail />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Routes>
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route 
+                path="/admin/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/appointments" 
+                element={
+                  <ProtectedRoute>
+                    <Appointments />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/blog" 
+                element={
+                  <ProtectedRoute>
+                    <Blog />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/gallery" 
+                element={
+                  <ProtectedRoute>
+                    <Gallery />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/team" 
+                element={
+                  <ProtectedRoute>
+                    <Team />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/analytics" 
+                element={
+                  <ProtectedRoute>
+                    <Analytics />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Public Routes */}
+              <Route path="/" element={<><Header /><Index /><Footer /></>} />
+              <Route path="/about" element={<><Header /><AboutPage /><Footer /></>} />
+              <Route path="/team" element={<><Header /><TeamPage /><Footer /></>} />
+              <Route path="/gallery" element={<><Header /><GalleryPage /><Footer /></>} />
+              <Route path="/news" element={<><Header /><NewsPage /><Footer /></>} />
+              <Route path="/contact" element={<><Header /><ContactPage /><Footer /></>} />
+              <Route path="/privacy-policy" element={<><Header /><PrivacyPolicy /><Footer /></>} />
+              <Route path="/terms-of-service" element={<><Header /><TermsOfService /><Footer /></>} />
+              <Route path="/pricing" element={<><Header /><PricingPage /><Footer /></>} />
+              <Route path="/procedures/:slug" element={<><Header /><ProcedureDetail /><Footer /></>} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<><Header /><NotFound /><Footer /></>} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>
