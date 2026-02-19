@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/admin-client';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useTeam = () => {
   const [teamMembers, setTeamMembers] = useState([]);

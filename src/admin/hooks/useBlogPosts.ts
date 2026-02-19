@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/admin-client';
+import { supabase } from '@/integrations/supabase/client';
 import type { BlogPost, NewBlogPost, UpdateBlogPost } from '@/integrations/supabase/types';
 
 export const useBlogPosts = () => {

@@ -25,6 +25,7 @@ import { Appointments } from "@/admin/pages/Appointments";
 import { Blog } from "@/admin/pages/Blog";
 import { Gallery } from "@/admin/pages/Gallery";
 import { Team } from "@/admin/pages/Team";
+import { Pricing } from "@/admin/pages/Pricing";
 import { Analytics } from "@/admin/pages/Analytics";
 import { Settings } from "@/admin/pages/Settings";
 
@@ -95,6 +96,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Team />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/pricing" 
+                element={
+                  <ProtectedRoute>
+                    <Pricing />
                   </ProtectedRoute>
                 } 
               />

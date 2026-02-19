@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/admin-client';
+import { supabase } from '@/integrations/supabase/client';
 import type { Appointment, BlogPost, GalleryImage } from '@/integrations/supabase/types';
 
-interface DashboardStats {
+export interface DashboardStats {
   totalAppointments: number;
   pendingAppointments: number;
   thisMonthAppointments: number;
@@ -74,9 +74,11 @@ export const useDashboard = () => {
         new Date(appt.created_at) >= thisMonth
       ).length || 0;
       
-      // Calculate conversion rate (simplified)
-      const totalInquiries = totalAppointments > 0 ? totalAppointments + 5 : 10; // Mock denominator
-      const conversionRate = Math.round((totalAppointments / totalInquiries) * 100);
+      // Calculate conversion rate (show actual pending vs confirmed)
+      const confirmedAppointments = appointments?.filter(appt => appt.status === 'confirmed').length || 0;
+      const conversionRate = totalAppointments > 0 
+        ? Math.round((confirmedAppointments / totalAppointments) * 100)
+        : 0;
       
       const totalBlogPosts = blogPosts?.length || 0;
       const publishedBlogPosts = blogPosts?.filter(post => post.status === 'published').length || 0;

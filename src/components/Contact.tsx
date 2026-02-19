@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import DOMPurify from "isomorphic-dompurify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +7,8 @@ import { Phone, Mail, MapPin, Clock, Send, Calendar, Loader2 } from "lucide-reac
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { appointmentFormSchema, type AppointmentFormData } from "@/lib/validations";
+import { sanitizeForStorage, getErrorMessage } from "@/lib/sanitization";
+import { getErrorMessage as getErrorMsg } from "@/lib/errors";
 
 interface SubmissionError {
   type: "network" | "validation" | "server" | "rate_limit" | "unknown";
@@ -15,7 +16,7 @@ interface SubmissionError {
   retryable: boolean;
 }
 
-function getErrorDetails(error: any): SubmissionError {
+function getErrorDetails(error: unknown): SubmissionError {
   if (!error) {
     return {
       type: "unknown",
@@ -24,7 +25,7 @@ function getErrorDetails(error: any): SubmissionError {
     };
   }
 
-  const errorMessage = String(error?.message || error);
+  const errorMessage = getErrorMsg(error);
   const errorStr = errorMessage.toLowerCase();
 
   // Network errors
@@ -140,14 +141,15 @@ export const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // Sanitize all user inputs to prevent XSS attacks
+      // ✅ Sanitize all user inputs to prevent XSS attacks
+      // Using strict storage config (no HTML tags allowed)
       const sanitizedData = {
-        name: DOMPurify.sanitize(formData.name.trim()),
-        email: DOMPurify.sanitize(formData.email.trim().toLowerCase()),
-        phone: DOMPurify.sanitize(formData.phone.trim()),
-        procedure: formData.procedure ? DOMPurify.sanitize(formData.procedure) : "",
+        name: sanitizeForStorage(formData.name.trim()),
+        email: sanitizeForStorage(formData.email.trim().toLowerCase()),
+        phone: sanitizeForStorage(formData.phone.trim()),
+        procedure: formData.procedure ? sanitizeForStorage(formData.procedure) : "",
         date: formData.date,
-        message: formData.message ? DOMPurify.sanitize(formData.message.trim()) : "",
+        message: formData.message ? sanitizeForStorage(formData.message.trim()) : "",
       };
 
       const { data, error } = await supabase.functions.invoke("send-appointment-email", {

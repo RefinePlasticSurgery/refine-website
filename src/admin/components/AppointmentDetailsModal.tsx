@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -33,17 +33,28 @@ interface AppointmentDetailsModalProps {
   appointment: Appointment | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onUpdateSuccess?: (updatedAppointment: Appointment) => void;
 }
 
 export const AppointmentDetailsModal = ({ 
   appointment, 
   open, 
-  onOpenChange 
+  onOpenChange,
+  onUpdateSuccess
 }: AppointmentDetailsModalProps) => {
-  const [status, setStatus] = useState(appointment?.status || 'pending');
+  const [status, setStatus] = useState<string>('pending');
   const [notes, setNotes] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const { updateAppointment } = useAppointments();
+
+  // ✅ Sync local state with props whenever appointment changes
+  // This prevents stale closures and ensures modal always shows current data
+  useEffect(() => {
+    if (appointment) {
+      setStatus(appointment.status);
+      setNotes('');
+    }
+  }, [appointment?.id]); // Only depend on ID to avoid re-syncs on every re-render
 
   const handleStatusChange = async () => {
     if (!appointment) return;
@@ -55,9 +66,17 @@ export const AppointmentDetailsModal = ({
         ...(notes && { message: `${appointment.message || ''}\n\nAdmin Notes: ${notes}` })
       };
       
-      await updateAppointment(appointment.id, updates);
-      setNotes('');
-      onOpenChange(false);
+      const updatedAppointment = await updateAppointment(appointment.id, updates);
+      
+      if (updatedAppointment) {
+        // Call callback to update parent with fresh data
+        if (onUpdateSuccess) {
+          onUpdateSuccess(updatedAppointment);
+        }
+        setNotes('');
+        // Close modal to show updated table
+        onOpenChange(false);
+      }
     } catch (error) {
       console.error('Error updating appointment:', error);
     } finally {
@@ -154,40 +173,41 @@ export const AppointmentDetailsModal = ({
           </div>
 
           {/* Status Update Section */}
-          <div className="border-t pt-6">
-            <h3 className="font-semibold text-lg mb-4">Update Appointment</h3>
+          <div className="border-t pt-6 bg-primary/5 -mx-6 -mb-6 px-6 py-6 rounded-b-lg">
+            <h3 className="font-semibold text-lg mb-4 text-foreground">Update Appointment Status</h3>
             
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Status</label>
+                <label className="text-sm font-medium mb-2 block text-foreground">New Status</label>
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-background">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="confirmed">Confirmed</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="pending">Pending - Awaiting confirmation</SelectItem>
+                    <SelectItem value="confirmed">Confirmed - Appointment confirmed</SelectItem>
+                    <SelectItem value="completed">Completed - Appointment completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled - Appointment cancelled</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-2 block">Admin Notes</label>
+                <label className="text-sm font-medium mb-2 block text-foreground">Admin Notes (Optional)</label>
                 <Textarea
                   placeholder="Add any notes about this appointment..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
+                  className="bg-background"
                 />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <Button 
                   onClick={handleStatusChange}
-                  disabled={isUpdating || status === appointment.status}
-                  className="flex-1"
+                  disabled={isUpdating || (status === appointment.status && !notes)}
+                  className="flex-1 bg-primary hover:bg-primary-dark"
                 >
                   {isUpdating ? (
                     <>
@@ -197,7 +217,7 @@ export const AppointmentDetailsModal = ({
                   ) : (
                     <>
                       <Check className="w-4 h-4 mr-2" />
-                      Update Status
+                      Save Changes
                     </>
                   )}
                 </Button>
@@ -206,9 +226,12 @@ export const AppointmentDetailsModal = ({
                   onClick={() => onOpenChange(false)}
                 >
                   <X className="w-4 h-4 mr-2" />
-                  Cancel
+                  Close
                 </Button>
               </div>
+              {status === appointment.status && !notes && (
+                <p className="text-xs text-muted-foreground">No changes to save</p>
+              )}
             </div>
           </div>
         </div>

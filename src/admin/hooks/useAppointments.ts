@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/admin-client';
+import { supabase } from '@/integrations/supabase/client';
 import type { Appointment, NewAppointment, UpdateAppointment } from '@/integrations/supabase/types';
+import { handleSupabaseDatabaseError, DatabaseError } from '@/lib/errors';
 
 interface UseAppointmentsReturn {
   appointments: Appointment[];
@@ -30,9 +31,10 @@ export const useAppointments = (): UseAppointmentsReturn => {
       if (fetchError) throw fetchError;
       
       setAppointments(data || []);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch appointments');
-      console.error('Error fetching appointments:', err);
+    } catch (err: unknown) {
+      const dbError = handleSupabaseDatabaseError(err);
+      setError(dbError.message);
+      console.error('Error fetching appointments:', dbError.code, dbError.message);
     } finally {
       setLoading(false);
     }
@@ -44,19 +46,20 @@ export const useAppointments = (): UseAppointmentsReturn => {
       
       const { data, error: createError } = await supabase
         .from('appointments')
-        .insert(appointment)
+        .insert([appointment])
         .select()
         .single();
 
       if (createError) throw createError;
       
-      // Refresh the list
-      await fetchAppointments();
+      // ✅ Optimistically add to list instead of refetching all
+      setAppointments(prev => [data, ...prev]);
       
       return data;
-    } catch (err: any) {
-      setError(err.message || 'Failed to create appointment');
-      console.error('Error creating appointment:', err);
+    } catch (err: unknown) {
+      const dbError = handleSupabaseDatabaseError(err);
+      setError(dbError.message);
+      console.error('Error creating appointment:', dbError.code, dbError.message);
       return null;
     }
   };
@@ -74,13 +77,16 @@ export const useAppointments = (): UseAppointmentsReturn => {
 
       if (updateError) throw updateError;
       
-      // Refresh the list
-      await fetchAppointments();
+      // ✅ Optimistically update in list instead of refetching all
+      setAppointments(prev =>
+        prev.map(appt => appt.id === id ? data : appt)
+      );
       
       return data;
-    } catch (err: any) {
-      setError(err.message || 'Failed to update appointment');
-      console.error('Error updating appointment:', err);
+    } catch (err: unknown) {
+      const dbError = handleSupabaseDatabaseError(err);
+      setError(dbError.message);
+      console.error('Error updating appointment:', dbError.code, dbError.message);
       return null;
     }
   };
@@ -96,13 +102,16 @@ export const useAppointments = (): UseAppointmentsReturn => {
 
       if (deleteError) throw deleteError;
       
-      // Refresh the list
-      await fetchAppointments();
+      // ✅ Optimistically remove from list instead of refetching all
+      setAppointments(prev =>
+        prev.filter(appt => appt.id !== id)
+      );
       
       return true;
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete appointment');
-      console.error('Error deleting appointment:', err);
+    } catch (err: unknown) {
+      const dbError = handleSupabaseDatabaseError(err);
+      setError(dbError.message);
+      console.error('Error deleting appointment:', dbError.code, dbError.message);
       return false;
     }
   };

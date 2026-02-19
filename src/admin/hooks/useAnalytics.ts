@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/admin-client';
+import { supabase } from '@/integrations/supabase/client';
 import type { Appointment } from '@/integrations/supabase/types';
 
 interface AnalyticsData {

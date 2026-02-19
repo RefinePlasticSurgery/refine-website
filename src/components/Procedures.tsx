@@ -1,13 +1,39 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { procedures } from "@/lib/procedures-data";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 export const Procedures = () => {
   const [activeTab, setActiveTab] = useState("facial");
+  const [api, setApi] = useState<any>(null);
+  const [current, setCurrent] = useState(0);
   const activeProc = procedures.find((p) => p.id === activeTab);
+
+  useEffect(() => {
+    if (!api) return;
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  // Auto-advance carousel every 4 seconds
+  useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [api]);
 
   return (
     <section id="procedures" className="py-16 md:py-24 bg-secondary">
@@ -102,47 +128,51 @@ export const Procedures = () => {
             </Link>
           </motion.div>
 
-          {/* Images Grid */}
-          <div className="grid grid-cols-2 gap-3 md:gap-4 order-1 lg:order-2">
-            {procedures.slice(0, 4).map((proc, index) => (
-              <motion.div
-                key={proc.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className={`relative rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group aspect-square ${
-                  index === 0 ? "col-span-2" : ""
-                }`}
-                onClick={() => setActiveTab(proc.id)}
+          {/* Carousel Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="order-1 lg:order-2"
+          >
+            <div className="relative rounded-2xl overflow-hidden bg-card shadow-lg">
+              <Carousel 
+                setApi={setApi}
+                className="w-full"
+                opts={{
+                  align: "center",
+                  loop: true,
+                }}
               >
-                <img
-                  src={proc.image}
-                  alt={proc.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className={`absolute inset-0 transition-opacity duration-300 ${
-                  activeTab === proc.id 
-                    ? "bg-primary/40" 
-                    : "bg-navy/40 group-hover:bg-navy/60"
-                }`} />
-                <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 font-body text-xs md:text-sm text-card font-medium">
-                  {proc.name}
+                <CarouselContent className="m-0">
+                  {procedures.map((proc) => (
+                    <CarouselItem key={proc.id} className="p-0 basis-full">
+                      <div className="relative aspect-video md:aspect-[4/3] overflow-hidden">
+                        <img
+                          src={proc.image}
+                          alt={proc.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/20 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+                          <h3 className="font-display text-lg md:text-xl text-card font-medium">
+                            {proc.name}
+                          </h3>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+
+              {/* Slide Counter */}
+              <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-navy/70 backdrop-blur-sm px-3 py-1 md:px-4 md:py-1.5 rounded-full">
+                <p className="font-body text-xs md:text-sm text-card font-medium">
+                  {current + 1} / {procedures.length}
                 </p>
-                {activeTab === proc.id && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="absolute top-3 right-3 w-6 h-6 rounded-full bg-primary flex items-center justify-center"
-                  >
-                    <Check className="w-4 h-4 text-primary-foreground" />
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

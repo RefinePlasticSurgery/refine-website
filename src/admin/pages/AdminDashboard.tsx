@@ -1,12 +1,18 @@
-import { useState } from 'react';
-import { LayoutDashboard, Users, Calendar, FileText, Image, BarChart3, Settings, LogOut, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { LayoutDashboard, Users, Calendar, FileText, Image, BarChart3, Settings, LogOut, Menu, X, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/admin/hooks/useAuth';
-import { useDashboard } from '@/admin/hooks/useDashboard';
+import { useDashboard, type DashboardStats } from '@/admin/hooks/useDashboard';
+import { useSidebarToggle } from '@/admin/hooks/useSidebarToggle';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 
-const OverviewStats = ({ stats, loading }: { stats: any; loading: boolean }) => {
+interface OverviewStatsProps {
+  stats: DashboardStats;
+  loading: boolean;
+}
+
+const OverviewStats = ({ stats, loading }: OverviewStatsProps) => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -84,10 +90,20 @@ const OverviewStats = ({ stats, loading }: { stats: any; loading: boolean }) => 
 };
 
 export const AdminDashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { sidebarOpen, closeSidebar, toggleSidebar } = useSidebarToggle();
+  const [windowSize, setWindowSize] = useState({ width: typeof window !== 'undefined' ? window.innerWidth : 1024 });
   const { user, signOut } = useAuth();
   const { stats, recentActivity, loading, error } = useDashboard();
   const navigate = useNavigate();
+
+  // Track window size for responsive sidebar
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },
@@ -95,6 +111,7 @@ export const AdminDashboard = () => {
     { icon: FileText, label: 'Blog', href: '/admin/blog' },
     { icon: Image, label: 'Gallery', href: '/admin/gallery' },
     { icon: Users, label: 'Team', href: '/admin/team' },
+    { icon: DollarSign, label: 'Pricing', href: '/admin/pricing' },
     { icon: BarChart3, label: 'Analytics', href: '/admin/analytics' },
     { icon: Settings, label: 'Settings', href: '/admin/settings' },
   ];
@@ -106,21 +123,48 @@ export const AdminDashboard = () => {
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transition-transform duration-300 ease-in-out`}>
-        <div className="flex items-center justify-between p-6 border-b border-border">
+      {/* Mobile backdrop overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden cursor-pointer"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
+      
+      {/* Sidebar - Desktop Static, Mobile Fixed */}
+      <div 
+        key={sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}
+        style={{
+          transform: windowSize.width < 1024 
+            ? (sidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
+            : 'translateX(0)',
+          transition: 'transform 300ms ease-in-out',
+          position: windowSize.width < 1024 ? 'fixed' : 'static' as 'fixed' | 'static',
+          pointerEvents: windowSize.width < 1024 && !sidebarOpen ? 'none' : 'auto',
+          top: 0,
+          left: 0,
+          bottom: 0
+        }}
+        className={`z-50 w-64 bg-card border-r border-border flex flex-col`}
+      >
+        {/* Sidebar Header */}
+        <div className="flex items-center justify-between p-6 border-b border-border shrink-0">
           <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden hover:bg-destructive/10 hover:text-destructive transition-colors"
+            aria-label="Close sidebar navigation menu"
+            onClick={closeSidebar}
+            title="Close sidebar (ESC)"
           >
             <X className="w-5 h-5" />
           </Button>
         </div>
         
-        <nav className="p-4 space-y-2">
+        {/* Sidebar Navigation - Scrollable */}
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -130,7 +174,7 @@ export const AdminDashboard = () => {
                 className="w-full justify-start gap-3 py-5 text-left"
                 onClick={() => {
                   navigate(item.href);
-                  setSidebarOpen(false);
+                  closeSidebar();
                 }}
               >
                 <Icon className="w-5 h-5" />
@@ -140,7 +184,8 @@ export const AdminDashboard = () => {
           })}
         </nav>
         
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-border shrink-0">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-primary font-medium">
@@ -165,27 +210,28 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Main Content - Shrinks when sidebar visible on desktop */}
+      <div className="flex-1 flex flex-col overflow-hidden w-full">
         {/* Header */}
-        <header className="bg-card border-b border-border px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <header className="relative z-10 bg-card border-b border-border px-6 py-3 h-16 flex items-center">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-3 min-w-0">
               <Button 
                 variant="ghost" 
-                size="icon" 
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(true)}
+                size="icon"
+                onClick={toggleSidebar}
+                aria-label="Toggle sidebar navigation"
+                aria-expanded={sidebarOpen}
+                title="Toggle sidebar menu (ESC to close)"
+                className="hover:bg-accent text-foreground flex-shrink-0"
               >
                 <Menu className="w-5 h-5" />
               </Button>
-              <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
+              <h2 className="text-2xl font-bold text-foreground truncate">Dashboard</h2>
             </div>
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm">
-                Last 30 days
-              </Button>
-            </div>
+            <Button variant="outline" size="sm" className="flex-shrink-0 ml-4">
+              Last 30 days
+            </Button>
           </div>
         </header>
 

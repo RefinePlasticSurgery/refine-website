@@ -1,20 +1,22 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/admin-client';
+import { Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { handleSupabaseAuthError, AuthError } from '@/lib/errors';
 
 interface AdminUser {
   id: string;
   email: string;
-  role: string;
+  role: 'admin' | 'editor' | 'viewer';
   created_at: string;
   last_login: string | null;
 }
 
 interface AuthContextType {
   user: AdminUser | null;
-  session: any;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  session: Session | null;
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   loading: boolean;
 }
 
@@ -32,62 +34,88 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Fetch admin user profile from database
+ * ✅ This ensures we get the ACTUAL user role from the database,
+ * not a hardcoded client-side role
+ */
+const fetchAdminUserProfile = async (userId: string): Promise<AdminUser | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('id, email, role, created_at, last_login')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching admin user profile:', error);
+      return null;
+    }
+
+    return data as AdminUser;
+  } catch (err) {
+    console.error('Unexpected error fetching admin user profile:', err);
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<AdminUser | null>(null);
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check active session on mount
+    // ✅ Prevent memory leaks on unmount
+    let isMounted = true;
+
     const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
+        if (!isMounted) return;
         setSession(session);
+
         if (session?.user) {
-          // For now, create a basic admin user object
-          // In production, you'd fetch this from your database
-          const adminUser: AdminUser = {
-            id: session.user.id,
-            email: session.user.email || '',
-            role: 'admin',
-            created_at: new Date().toISOString(),
-            last_login: null
-          };
-          setUser(adminUser);
+          // ✅ Fetch user profile from database instead of creating client-side
+          const adminUser = await fetchAdminUserProfile(session.user.id);
+          if (isMounted && adminUser) {
+            setUser(adminUser);
+          }
         }
       } catch (error) {
         console.error('Error checking session:', error);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     checkSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        const adminUser: AdminUser = {
-          id: session.user.id,
-          email: session.user.email || '',
-          role: 'admin',
-          created_at: new Date().toISOString(),
-          last_login: null
-        };
-        setUser(adminUser);
-      } else {
-        setUser(null);
+    // ✅ Listen for auth changes with proper cleanup
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        if (!isMounted) return;
+        setSession(session);
+
+        if (session?.user) {
+          // ✅ Fetch user profile from database
+          const adminUser = await fetchAdminUserProfile(session.user.id);
+          if (isMounted && adminUser) {
+            setUser(adminUser);
+          }
+        } else {
+          setUser(null);
+        }
       }
-      setLoading(false);
-    });
+    );
 
     return () => {
-      subscription.unsubscribe();
+      // ✅ Clean up on unmount
+      isMounted = false;
+      subscription?.unsubscribe();
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<{ error: AuthError | null }> => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -96,20 +124,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (error) throw error;
 
-      // Create admin user object
-      const adminUser: AdminUser = {
-        id: data.user.id,
-        email: data.user.email || '',
-        role: 'admin',
-        created_at: new Date().toISOString(),
-        last_login: null
-      };
-      
-      setUser(adminUser);
+      if (data.user) {
+        // ✅ Fetch user profile from database
+        const adminUser = await fetchAdminUserProfile(data.user.id);
+        if (adminUser) {
+          setUser(adminUser);
+          setSession(data.session);
+        } else {
+          // User exists in Auth but not in admin_users table
+          return { error: new AuthError('User account not configured as admin', 'PERMISSION_DENIED') };
+        }
+      }
+
       return { error: null };
-    } catch (error: any) {
-      console.error('Sign in error:', error);
-      return { error };
+    } catch (error: unknown) {
+      const authError = handleSupabaseAuthError(error);
+      console.error('Sign in error:', authError.code, authError.message);
+      return { error: authError };
     }
   };
 
@@ -123,7 +154,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string): Promise<{ error: AuthError | null }> => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -133,9 +164,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (error) throw error;
 
       return { error: null };
-    } catch (error: any) {
-      console.error('Sign up error:', error);
-      return { error };
+    } catch (error: unknown) {
+      const authError = handleSupabaseAuthError(error);
+      console.error('Sign up error:', authError.code, authError.message);
+      return { error: authError };
     }
   };
 

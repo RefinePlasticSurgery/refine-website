@@ -1,25 +1,35 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+// ✅ Initialize Supabase client for database operations
+const supabaseUrl = Deno.env.get("SUPABASE_URL");
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: { persistSession: false },
+});
 
 // Only allow requests from your domain(s)
 const ALLOWED_ORIGINS = [
   "https://refineplasticsurgerytz.com",
   "https://www.refineplasticsurgerytz.com",
   "https://refine-plastic-surgery.vercel.app",
-];
-
-// Development origins
-const DEV_ORIGINS = [
+  // Development origins - always included for local development
   "http://localhost:3000",
   "http://localhost:8080",
   "http://127.0.0.1:8080",
+  "http://192.168.0.100:8080",
 ];
 
 const getAllowedOrigins = () => {
-  const env = Deno.env.get("DENO_ENV") || "production";
-  return env === "development" ? [...ALLOWED_ORIGINS, ...DEV_ORIGINS] : ALLOWED_ORIGINS;
+  return ALLOWED_ORIGINS;
 };
 
 // Helper function to escape HTML and prevent XSS
@@ -200,7 +210,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Refine Appointments <onboarding@resend.dev>",
-      to: ["info@refineplasticsurgerytz.com"],
+      to: ["info@refineplasticsurgerytz.com", "refineplasticsurgerytz@gmail.com"],
       subject: `New Appointment Request from ${escapeHtml(name)}`,
       html: emailHtml,
       reply_to: email,
@@ -251,7 +261,34 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Confirmation email sent to patient");
 
-    return new Response(JSON.stringify({ success: true, data: emailResponse }), {
+    // ✅ INSERT APPOINTMENT INTO DATABASE
+    // This ensures the appointment is stored in the database for admin dashboard
+    const { data: appointmentData, error: dbError } = await supabase
+      .from("appointments")
+      .insert([
+        {
+          name,
+          email,
+          phone,
+          procedure: procedure || "General Consultation",
+          preferred_date: date || null,
+          message: message || null,
+          status: "pending", // Initial status is pending
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ])
+      .select();
+
+    if (dbError) {
+      console.error("Error inserting appointment into database:", dbError);
+      // Log the error but still return success since emails were sent
+      // This prevents the user from seeing an error when the email was sent
+    } else {
+      console.log("Appointment successfully inserted into database:", appointmentData);
+    }
+
+    return new Response(JSON.stringify({ success: true, data: appointmentData || emailResponse }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
