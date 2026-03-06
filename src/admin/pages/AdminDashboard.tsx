@@ -99,8 +99,12 @@ export const AdminDashboard = () => {
   // Track window size for responsive sidebar
   useEffect(() => {
     const handleResize = () => {
-      setWindowSize({ width: window.innerWidth });
+      const newWidth = window.innerWidth;
+      console.log('[AdminDashboard] Window resized to:', newWidth);
+      setWindowSize({ width: newWidth });
     };
+    // Log initial width
+    console.log('[AdminDashboard] Initial window width:', window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -133,6 +137,7 @@ export const AdminDashboard = () => {
       )}
       
       {/* Sidebar - Desktop Static, Mobile Fixed */}
+      {console.log('[AdminDashboard] Rendering sidebar - windowSize:', windowSize.width, 'sidebarOpen:', sidebarOpen, 'isMobile:', windowSize.width < 1024)}
       <div 
         key={sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}
         style={{
@@ -219,7 +224,10 @@ export const AdminDashboard = () => {
               <Button 
                 variant="ghost" 
                 size="icon"
-                onClick={toggleSidebar}
+                onClick={() => {
+                  console.log('[AdminDashboard] Hamburger button clicked, current sidebar state:', sidebarOpen);
+                  toggleSidebar();
+                }}
                 aria-label="Toggle sidebar navigation"
                 aria-expanded={sidebarOpen}
                 title="Toggle sidebar menu (ESC to close)"

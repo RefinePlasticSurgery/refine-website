@@ -15,9 +15,21 @@ export const useSidebarToggle = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
-  const closeSidebar = () => setSidebarOpen(false);
-  const openSidebar = () => setSidebarOpen(true);
+  const toggleSidebar = () => {
+    console.log('[useSidebarToggle] Toggle called, current state:', sidebarOpen);
+    setSidebarOpen(prev => {
+      console.log('[useSidebarToggle] State updating from', prev, 'to', !prev);
+      return !prev;
+    });
+  };
+  const closeSidebar = () => {
+    console.log('[useSidebarToggle] Close called');
+    setSidebarOpen(false);
+  };
+  const openSidebar = () => {
+    console.log('[useSidebarToggle] Open called');
+    setSidebarOpen(true);
+  };
 
   // Handle ESC key
   useEffect(() => {

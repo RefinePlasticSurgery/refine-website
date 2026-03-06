@@ -2,7 +2,16 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+if (!resendApiKey) {
+  console.error(
+    "ERROR: RESEND_API_KEY environment variable is not set. " +
+    "Emails will not be sent. Please set RESEND_API_KEY in Supabase Edge Function secrets."
+  );
+}
+
+const resend = new Resend(resendApiKey);
 
 // ✅ Initialize Supabase client for database operations
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -216,7 +225,19 @@ const handler = async (req: Request): Promise<Response> => {
       reply_to: email,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    // Check if email sending failed
+    if (!emailResponse || emailResponse.error) {
+      const errorMsg = emailResponse?.error?.message || "Unknown email service error";
+      console.error("Email sending failed - Check if RESEND_API_KEY is set:", {
+        error: errorMsg,
+        hasApiKey: !!resendApiKey,
+      });
+
+      // Still insert appointment but log the email failure
+      console.warn("Email failed but will attempt to insert appointment into database anyway");
+    } else {
+      console.log("Admin email sent successfully:", emailResponse);
+    }
 
     // Also send confirmation to the patient
     const confirmationHtml = `
@@ -252,14 +273,24 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    await resend.emails.send({
+    const confirmationResponse = await resend.emails.send({
       from: "Refine Appointments <onboarding@resend.dev>",
       to: [email],
       subject: "Appointment Request Received - Refine Plastic Surgery",
       html: confirmationHtml,
     });
 
-    console.log("Confirmation email sent to patient");
+    // Check if confirmation email sending failed
+    if (!confirmationResponse || confirmationResponse.error) {
+      const errorMsg = confirmationResponse?.error?.message || "Unknown email service error";
+      console.error("Confirmation email to patient failed:", {
+        error: errorMsg,
+        patientEmail: email,
+        hasApiKey: !!resendApiKey,
+      });
+    } else {
+      console.log("Confirmation email sent to patient:", confirmationResponse);
+    }
 
     // ✅ INSERT APPOINTMENT INTO DATABASE
     // This ensures the appointment is stored in the database for admin dashboard
