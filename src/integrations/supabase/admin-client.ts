@@ -27,8 +27,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 // This respects Row Level Security policies and is safe to expose
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
-    storage: localStorage,
-    persistSession: true,
+    persistSession: false,
     autoRefreshToken: true,
     detectSessionInUrl: true,
   },

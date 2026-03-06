@@ -23,11 +23,9 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    // Check system preference or stored preference
-    const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    // Check system preference only (no localStorage)
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+    const initialTheme = systemPrefersDark ? 'dark' : 'light';
     setTheme(initialTheme);
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
   }, []);
@@ -35,7 +33,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    // Theme not persisted - using in-memory session only
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
