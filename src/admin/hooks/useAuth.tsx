@@ -52,6 +52,11 @@ const fetchAdminUserProfile = async (userId: string): Promise<AdminUser | null> 
       return null;
     }
 
+    if (!data) {
+      console.warn('Admin user profile not found for user:', userId);
+      return null;
+    }
+
     return data as AdminUser;
   } catch (err) {
     console.error('Unexpected error fetching admin user profile:', err);
@@ -72,17 +77,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!isMounted) return;
+        
         setSession(session);
 
         if (session?.user) {
           // ✅ Fetch user profile from database instead of creating client-side
           const adminUser = await fetchAdminUserProfile(session.user.id);
-          if (isMounted && adminUser) {
-            setUser(adminUser);
+          if (isMounted) {
+            if (adminUser) {
+              setUser(adminUser);
+            } else {
+              // Auth session exists but admin profile doesn't
+              // Don't log out, just leave user as null - ProtectedRoute will redirect
+              console.warn('Admin profile not found for authenticated user:', session.user.id);
+            }
           }
+        } else {
+          // No session at all
+          setUser(null);
         }
       } catch (error) {
         console.error('Error checking session:', error);
+        if (isMounted) {
+          setUser(null);
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -99,8 +117,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (session?.user) {
           // ✅ Fetch user profile from database
           const adminUser = await fetchAdminUserProfile(session.user.id);
-          if (isMounted && adminUser) {
-            setUser(adminUser);
+          if (isMounted) {
+            if (adminUser) {
+              setUser(adminUser);
+            } else {
+              // Auth session exists but admin profile doesn't
+              setUser(null);
+            }
           }
         } else {
           setUser(null);
@@ -124,19 +147,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (error) throw error;
 
-      if (data.user) {
+      if (data.user && data.session) {
         // ✅ Fetch user profile from database
         const adminUser = await fetchAdminUserProfile(data.user.id);
+        
         if (adminUser) {
+          // Profile exists - user is properly configured as admin
           setUser(adminUser);
           setSession(data.session);
+          return { error: null };
         } else {
-          // User exists in Auth but not in admin_users table
-          return { error: new AuthError('User account not configured as admin', 'PERMISSION_DENIED') };
+          // Auth succeeded but admin profile doesn't exist
+          // Sign out immediately to prevent confusion
+          await supabase.auth.signOut();
+          setUser(null);
+          setSession(null);
+          return { 
+            error: new AuthError(
+              'Your account is not configured as an admin user. Please contact the administrator.',
+              'ADMIN_NOT_CONFIGURED'
+            ) 
+          };
         }
       }
 
-      return { error: null };
+      return { 
+        error: new AuthError('Sign in failed. Please try again.', 'SIGN_IN_FAILED') 
+      };
     } catch (error: unknown) {
       const authError = handleSupabaseAuthError(error);
       console.error('Sign in error:', authError.code, authError.message);
