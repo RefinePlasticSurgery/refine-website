@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,23 +17,36 @@ export const AdminLogin = () => {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log('[AdminLogin] Component mounted');
+    return () => console.log('[AdminLogin] Component unmounted');
+  }, []);
+
+  console.log('[AdminLogin] Component rendered, form loading:', loading);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[AdminLogin] Form submitted with email:', email);
     setLoading(true);
     setError(null);
 
     try {
+      console.log('[AdminLogin] Calling signIn...');
       const { error } = await signIn(email, password);
       
       if (error) {
+        console.error('[AdminLogin] Sign-in returned error:', error);
         setError(error.message || 'Failed to sign in');
       } else {
+        console.log('[AdminLogin] Sign-in successful, redirecting to dashboard...');
         // Redirect to admin dashboard
         navigate('/admin/dashboard');
       }
     } catch (err: any) {
+      console.error('[AdminLogin] Unexpected error during sign-in:', err);
       setError(err.message || 'An unexpected error occurred');
     } finally {
+      console.log('[AdminLogin] Sign-in attempt complete');
       setLoading(false);
     }
   };

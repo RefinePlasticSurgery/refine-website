@@ -41,6 +41,7 @@ interface AuthProviderProps {
  */
 const fetchAdminUserProfile = async (userId: string): Promise<AdminUser | null> => {
   try {
+    console.log('[useAuth] Fetching admin user profile for userId:', userId);
     const { data, error } = await supabase
       .from('admin_users')
       .select('id, email, role, created_at, last_login')
@@ -48,18 +49,19 @@ const fetchAdminUserProfile = async (userId: string): Promise<AdminUser | null> 
       .single();
 
     if (error) {
-      console.error('Error fetching admin user profile:', error);
+      console.error('[useAuth] Error fetching admin user profile:', error);
       return null;
     }
 
     if (!data) {
-      console.warn('Admin user profile not found for user:', userId);
+      console.warn('[useAuth] Admin user profile not found for user:', userId);
       return null;
     }
 
+    console.log('[useAuth] Admin user profile fetched successfully:', data);
     return data as AdminUser;
   } catch (err) {
-    console.error('Unexpected error fetching admin user profile:', err);
+    console.error('[useAuth] Unexpected error fetching admin user profile:', err);
     return null;
   }
 };
@@ -75,16 +77,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const checkSession = async () => {
       try {
+        console.log('[useAuth] Checking existing session...');
         const { data: { session } } = await supabase.auth.getSession();
+        console.log('[useAuth] Session check complete. Session exists:', !!session);
+        
         if (!isMounted) return;
         
         setSession(session);
 
         if (session?.user) {
+          console.log('[useAuth] User session found, fetching admin profile...');
           // ✅ Fetch user profile from database instead of creating client-side
           const adminUser = await fetchAdminUserProfile(session.user.id);
           if (isMounted) {
             if (adminUser) {
+              console.log('[useAuth] Admin user profile loaded, setting user state');
               setUser(adminUser);
             } else {
               // Auth session exists but admin profile doesn't
@@ -93,6 +100,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             }
           }
         } else {
+          console.log('[useAuth] No user session found');
           // No session at all
           setUser(null);
         }
@@ -140,25 +148,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signIn = async (email: string, password: string): Promise<{ error: AuthError | null }> => {
     try {
+      console.log('[useAuth] Sign-in attempt for email:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[useAuth] Sign-in error from Supabase:', error);
+        throw error;
+      }
+
+      console.log('[useAuth] Sign-in successful, user:', data.user?.id);
 
       if (data.user && data.session) {
         // ✅ Fetch user profile from database
+        console.log('[useAuth] Fetching admin profile after sign-in...');
         const adminUser = await fetchAdminUserProfile(data.user.id);
         
         if (adminUser) {
           // Profile exists - user is properly configured as admin
+          console.log('[useAuth] Admin profile confirmed, setting session and user');
           setUser(adminUser);
           setSession(data.session);
           return { error: null };
         } else {
           // Auth succeeded but admin profile doesn't exist
           // Sign out immediately to prevent confusion
+          console.error('[useAuth] Admin profile does not exist for signed-in user');
           await supabase.auth.signOut();
           setUser(null);
           setSession(null);
@@ -171,12 +188,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }
 
+      console.error('[useAuth] Sign-in returned no user or session');
       return { 
         error: new AuthError('Sign in failed. Please try again.', 'SIGN_IN_FAILED') 
       };
     } catch (error: unknown) {
       const authError = handleSupabaseAuthError(error);
-      console.error('Sign in error:', authError.code, authError.message);
+      console.error('[useAuth] Sign in error:', authError.code, authError.message);
       return { error: authError };
     }
   };
