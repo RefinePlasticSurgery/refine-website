@@ -8,6 +8,7 @@ import { Plus, Search, Edit, Trash2, User, X } from "lucide-react";
 import { useTeam } from "@/admin/hooks/useTeam";
 import { AdminLayout } from "@/admin/components/AdminLayout";
 import type { TeamMember } from "@/integrations/supabase/types";
+import { useToast } from "@/hooks/use-toast";
 
 export const Team = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +22,15 @@ export const Team = () => {
     specialties: "",
   });
   const [saving, setSaving] = useState(false);
-  const { teamMembers, loading, error, createTeamMember, updateTeamMember } = useTeam();
+  const {
+    teamMembers,
+    loading,
+    error,
+    createTeamMember,
+    updateTeamMember,
+    deleteTeamMember,
+  } = useTeam();
+  const { toast } = useToast();
 
   const filteredMembers = teamMembers.filter(
     (member) =>
@@ -93,6 +102,22 @@ export const Team = () => {
       console.error("Save failed:", err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    const ok = confirm("Delete this team member? This cannot be undone.");
+    if (!ok) return;
+
+    const result = await deleteTeamMember(id);
+    if (result) {
+      toast({ title: "Deleted", description: "Team member removed." });
+    } else {
+      toast({
+        title: "Delete failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -210,7 +235,12 @@ export const Team = () => {
                       <Edit className="mr-2 h-4 w-4" />
                       Edit
                     </Button>
-                    <Button variant="destructive" size="sm" type="button">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      type="button"
+                      onClick={() => handleDelete(member.id)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

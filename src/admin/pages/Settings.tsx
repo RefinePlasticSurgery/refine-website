@@ -1,382 +1,343 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { 
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
-import { 
-  Building, 
-  Phone, 
-  Mail, 
-  Clock, 
+import { useState } from "react";
+import {
+  Building,
+  Phone,
+  Mail,
+  Clock,
   MapPin,
   Key,
   Bell,
-} from 'lucide-react';
-import { useAuth } from '@/admin/hooks/useAuth';
-import { AdminLayout } from '@/admin/components/AdminLayout';
+} from "lucide-react";
+
+import { useAuth } from "@/admin/hooks/useAuth";
+import { AdminLayout } from "@/admin/components/AdminLayout";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+
+import { useToast } from "@/hooks/use-toast";
 
 export const Settings = () => {
-  const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('general');
   const { user } = useAuth();
+  const { toast } = useToast();
 
-  // Form states
+  const [activeTab, setActiveTab] = useState<"general" | "account" | "notifications">("general");
+
+  const [savingGeneral, setSavingGeneral] = useState(false);
+  const [savingAccount, setSavingAccount] = useState(false);
+  const [savingNotifications, setSavingNotifications] = useState(false);
+
   const [generalSettings, setGeneralSettings] = useState({
-    businessName: 'Refine Plastic & Aesthetic Surgery Centre',
-    phone: '(+255) 793 145 167',
-    email: 'info@refineplasticsurgerytz.com',
-    address: 'Dar es Salaam, Tanzania',
-    workingHours: 'Mon-Fri: 8:00 AM - 6:00 PM, Sat: 9:00 AM - 2:00 PM',
-    about: 'Your trusted destination for cosmetic excellence and personalized care.'
+    businessName: "Refine Plastic & Aesthetic Surgery Centre",
+    phone: "(+255) 793 145 167",
+    email: "info@refineplasticsurgerytz.com",
+    address: "Dar es Salaam, Tanzania",
+    workingHours: "Mon-Fri: 8:00 AM - 6:00 PM, Sat: 9:00 AM - 2:00 PM",
+    about:
+      "Your trusted destination for cosmetic excellence and personalized care.",
   });
 
   const [accountSettings, setAccountSettings] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: true,
     appointmentReminders: true,
     marketingEmails: false,
-    smsNotifications: true
+    smsNotifications: true,
   });
 
   const handleSaveGeneral = async () => {
-    setSaving(true);
+    setSavingGeneral(true);
     try {
-      // Save general settings
-      setTimeout(() => {
-        setSaving(false);
-        alert('Settings saved successfully!');
-      }, 1000);
-    } catch (err) {
-      console.error('Save failed:', err);
-      setSaving(false);
+      await new Promise((r) => setTimeout(r, 800));
+      toast({ title: "Saved", description: "General settings updated." });
+    } finally {
+      setSavingGeneral(false);
     }
   };
 
   const handleSaveAccount = async () => {
     if (accountSettings.newPassword !== accountSettings.confirmPassword) {
-      alert('Passwords do not match');
+      toast({ title: "Password mismatch", description: "New passwords must match.", variant: "destructive" });
       return;
     }
 
-    setSaving(true);
+    setSavingAccount(true);
     try {
-      // Save account settings
-      setTimeout(() => {
-        setSaving(false);
-        setAccountSettings({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        });
-        alert('Password updated successfully!');
-      }, 1000);
-    } catch (err) {
-      console.error('Save failed:', err);
-      setSaving(false);
+      await new Promise((r) => setTimeout(r, 900));
+      setAccountSettings({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      toast({ title: "Updated", description: "Password changed successfully (demo)." });
+    } finally {
+      setSavingAccount(false);
     }
   };
 
   const handleSaveNotifications = async () => {
-    setSaving(true);
+    setSavingNotifications(true);
     try {
-      // Save notification settings
-      setTimeout(() => {
-        setSaving(false);
-        alert('Notification preferences saved!');
-      }, 1000);
-    } catch (err) {
-      console.error('Save failed:', err);
-      setSaving(false);
+      await new Promise((r) => setTimeout(r, 700));
+      toast({ title: "Preferences saved", description: "Notification settings updated." });
+    } finally {
+      setSavingNotifications(false);
     }
   };
 
   return (
     <AdminLayout
       title="Settings"
-      description={user?.email ? `Workspace · ${user.email}` : "Workspace preferences"}
+      description={user?.email ? `Signed in as ${user.email}` : "Workspace settings"}
       segment="Settings"
     >
-      <div className="mx-auto max-w-4xl">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="general">General</TabsTrigger>
-                <TabsTrigger value="account">Account</TabsTrigger>
-                <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              </TabsList>
+      <Card className="mb-6 rounded-2xl border-border/60 bg-card/90 shadow-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bell className="h-5 w-5 text-primary" />
+            Preferences & administration
+          </CardTitle>
+          <CardDescription>
+            Configure your organization profile, account security, and notification workflows.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) =>
+              setActiveTab(v as "general" | "account" | "notifications")
+            }
+          >
+            <TabsList className="grid w-full max-w-xl grid-cols-3">
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            </TabsList>
 
-              {/* General Settings */}
-              <TabsContent value="general" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Building className="w-5 h-5" />
-                      Business Information
-                    </CardTitle>
-                    <CardDescription>
-                      Update your clinic's public information and contact details
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Business Name</label>
-                        <Input
-                          value={generalSettings.businessName}
-                          onChange={(e) => setGeneralSettings({...generalSettings, businessName: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Phone Number</label>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                          <Input
-                            value={generalSettings.phone}
-                            onChange={(e) => setGeneralSettings({...generalSettings, phone: e.target.value})}
-                            className="pl-10"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Email Address</label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                          <Input
-                            type="email"
-                            value={generalSettings.email}
-                            onChange={(e) => setGeneralSettings({...generalSettings, email: e.target.value})}
-                            className="pl-10"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Working Hours</label>
-                        <div className="relative">
-                          <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                          <Input
-                            value={generalSettings.workingHours}
-                            onChange={(e) => setGeneralSettings({...generalSettings, workingHours: e.target.value})}
-                            className="pl-10"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Address</label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          value={generalSettings.address}
-                          onChange={(e) => setGeneralSettings({...generalSettings, address: e.target.value})}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">About Description</label>
-                      <Textarea
-                        value={generalSettings.about}
-                        onChange={(e) => setGeneralSettings({...generalSettings, about: e.target.value})}
-                        rows={3}
-                      />
-                    </div>
-                    
-                    <div className="pt-4">
-                      <Button 
-                        onClick={handleSaveGeneral}
-                        disabled={saving}
-                      >
-                        {saving ? (
-                          <>
-                            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-                            Saving...
-                          </>
-                        ) : (
-                          'Save Changes'
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* Account Settings */}
-              <TabsContent value="account" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Key className="w-5 h-5" />
-                      Account Security
-                    </CardTitle>
-                    <CardDescription>
-                      Update your password and account security settings
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Current Password</label>
+            <TabsContent value="general" className="mt-6">
+              <Card className="border-border/60 bg-card/70 shadow-none">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building className="h-5 w-5 text-primary" />
+                    Business information
+                  </CardTitle>
+                  <CardDescription>Updates are reflected on public pages (demo workflow).</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Business name</label>
                       <Input
-                        type="password"
-                        value={accountSettings.currentPassword}
-                        onChange={(e) => setAccountSettings({...accountSettings, currentPassword: e.target.value})}
+                        value={generalSettings.businessName}
+                        onChange={(e) => setGeneralSettings({ ...generalSettings, businessName: e.target.value })}
+                        disabled={savingGeneral}
                       />
                     </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">New Password</label>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Phone</label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={generalSettings.phone}
+                          onChange={(e) => setGeneralSettings({ ...generalSettings, phone: e.target.value })}
+                          className="pl-10"
+                          disabled={savingGeneral}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email</label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={generalSettings.email}
+                          onChange={(e) => setGeneralSettings({ ...generalSettings, email: e.target.value })}
+                          className="pl-10"
+                          disabled={savingGeneral}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Working hours</label>
+                      <div className="relative">
+                        <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={generalSettings.workingHours}
+                          onChange={(e) => setGeneralSettings({ ...generalSettings, workingHours: e.target.value })}
+                          className="pl-10"
+                          disabled={savingGeneral}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Address</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        value={generalSettings.address}
+                        onChange={(e) => setGeneralSettings({ ...generalSettings, address: e.target.value })}
+                        className="pl-10"
+                        disabled={savingGeneral}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">About</label>
+                    <Textarea
+                      value={generalSettings.about}
+                      onChange={(e) => setGeneralSettings({ ...generalSettings, about: e.target.value })}
+                      disabled={savingGeneral}
+                      rows={4}
+                    />
+                  </div>
+
+                  <div className="flex justify-end">
+                    <Button onClick={handleSaveGeneral} disabled={savingGeneral} className="gap-2">
+                      {savingGeneral ? "Saving..." : "Save general settings"}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="account" className="mt-6">
+              <Card className="border-border/60 bg-card/70 shadow-none">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Key className="h-5 w-5 text-primary" />
+                    Account security
+                  </CardTitle>
+                  <CardDescription>Change your password with a safe workflow (demo).</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Current password</label>
+                    <Input
+                      type="password"
+                      value={accountSettings.currentPassword}
+                      onChange={(e) => setAccountSettings({ ...accountSettings, currentPassword: e.target.value })}
+                      disabled={savingAccount}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">New password</label>
                       <Input
                         type="password"
                         value={accountSettings.newPassword}
-                        onChange={(e) => setAccountSettings({...accountSettings, newPassword: e.target.value})}
+                        onChange={(e) => setAccountSettings({ ...accountSettings, newPassword: e.target.value })}
+                        disabled={savingAccount}
                       />
                     </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Confirm New Password</label>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Confirm new password</label>
                       <Input
                         type="password"
                         value={accountSettings.confirmPassword}
-                        onChange={(e) => setAccountSettings({...accountSettings, confirmPassword: e.target.value})}
+                        onChange={(e) => setAccountSettings({ ...accountSettings, confirmPassword: e.target.value })}
+                        disabled={savingAccount}
                       />
                     </div>
-                    
-                    <div className="pt-4">
-                      <Button 
-                        onClick={handleSaveAccount}
-                        disabled={saving || !accountSettings.currentPassword || !accountSettings.newPassword}
-                      >
-                        {saving ? (
-                          <>
-                            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-                            Updating...
-                          </>
-                        ) : (
-                          'Update Password'
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                  </div>
 
-              {/* Notification Settings */}
-              <TabsContent value="notifications" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Bell className="w-5 h-5" />
-                      Notification Preferences
-                    </CardTitle>
-                    <CardDescription>
-                      Configure how you receive notifications and alerts
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Email Notifications</h4>
-                        <p className="text-sm text-muted-foreground">Receive email updates about appointments</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={notificationSettings.emailNotifications}
-                          onChange={(e) => setNotificationSettings({...notificationSettings, emailNotifications: e.target.checked})}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                      </label>
+                  <div className="flex justify-end">
+                    <Button onClick={handleSaveAccount} disabled={savingAccount} className="gap-2">
+                      {savingAccount ? "Updating..." : "Update password"}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="notifications" className="mt-6">
+              <Card className="border-border/60 bg-card/70 shadow-none">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5 text-primary" />
+                    Notification workflows
+                  </CardTitle>
+                  <CardDescription>Choose how you want updates delivered (demo).</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between gap-4 rounded-lg border border-border/60 bg-muted/15 p-4">
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">Email notifications</p>
+                      <p className="text-xs text-muted-foreground">Appointment and system updates via email.</p>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Appointment Reminders</h4>
-                        <p className="text-sm text-muted-foreground">Get reminders for upcoming appointments</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={notificationSettings.appointmentReminders}
-                          onChange={(e) => setNotificationSettings({...notificationSettings, appointmentReminders: e.target.checked})}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                      </label>
+                    <Switch
+                      checked={notificationSettings.emailNotifications}
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, emailNotifications: checked })
+                      }
+                      disabled={savingNotifications}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 rounded-lg border border-border/60 bg-muted/15 p-4">
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">Appointment reminders</p>
+                      <p className="text-xs text-muted-foreground">Proactive reminders before consultations.</p>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">SMS Notifications</h4>
-                        <p className="text-sm text-muted-foreground">Receive SMS alerts for important updates</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={notificationSettings.smsNotifications}
-                          onChange={(e) => setNotificationSettings({...notificationSettings, smsNotifications: e.target.checked})}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                      </label>
+                    <Switch
+                      checked={notificationSettings.appointmentReminders}
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, appointmentReminders: checked })
+                      }
+                      disabled={savingNotifications}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 rounded-lg border border-border/60 bg-muted/15 p-4">
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">SMS notifications</p>
+                      <p className="text-xs text-muted-foreground">Short reminders and alerts via SMS.</p>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Marketing Emails</h4>
-                        <p className="text-sm text-muted-foreground">Receive promotional emails and updates</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={notificationSettings.marketingEmails}
-                          onChange={(e) => setNotificationSettings({...notificationSettings, marketingEmails: e.target.checked})}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                      </label>
+                    <Switch
+                      checked={notificationSettings.smsNotifications}
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, smsNotifications: checked })
+                      }
+                      disabled={savingNotifications}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 rounded-lg border border-border/60 bg-muted/15 p-4">
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">Marketing emails</p>
+                      <p className="text-xs text-muted-foreground">News, offers, and clinic updates.</p>
                     </div>
-                    
-                    <div className="pt-4">
-                      <Button 
-                        onClick={handleSaveNotifications}
-                        disabled={saving}
-                      >
-                        {saving ? (
-                          <>
-                            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-                            Saving...
-                          </>
-                        ) : (
-                          'Save Preferences'
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-      </div>
+                    <Switch
+                      checked={notificationSettings.marketingEmails}
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, marketingEmails: checked })
+                      }
+                      disabled={savingNotifications}
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-2">
+                    <Button onClick={handleSaveNotifications} disabled={savingNotifications}>
+                      {savingNotifications ? "Saving..." : "Save notification preferences"}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </AdminLayout>
   );
 };
+

@@ -61,11 +61,28 @@ export const handleSupabaseAuthError = (error: unknown): AuthError => {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
 
-    if (message.includes('invalid login credentials')) {
+    if (
+      message.includes('invalid login credentials') ||
+      message.includes('invalid grant') ||
+      message.includes('invalid_grant') ||
+      message.includes('wrong email or password') ||
+      message.includes('incorrect email or password')
+    ) {
       return new AuthError('Invalid email or password', 'INVALID_CREDENTIALS');
     }
     if (message.includes('user not found')) {
       return new AuthError('User not found', 'USER_NOT_FOUND');
+    }
+    if (
+      message.includes('email not confirmed') ||
+      message.includes('email not verified') ||
+      message.includes('confirm your email') ||
+      message.includes('unconfirmed')
+    ) {
+      return new AuthError(
+        'Please confirm your email address before signing in.',
+        'INVALID_CREDENTIALS'
+      );
     }
     if (
       message.includes('network') ||
