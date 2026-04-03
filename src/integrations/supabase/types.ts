@@ -36,6 +36,7 @@ export type Database = {
           created_at?: string
           last_login?: string | null
         }
+        Relationships: []
       }
       appointments: {
         Row: {
@@ -74,6 +75,7 @@ export type Database = {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       blog_posts: {
         Row: {
@@ -112,6 +114,7 @@ export type Database = {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       gallery_images: {
         Row: {
@@ -141,6 +144,49 @@ export type Database = {
           display_order?: number | null
           created_at?: string
         }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          id: string
+          name: string
+          role: string
+          bio: string | null
+          qualifications: string | null
+          specialties: string[] | null
+          image_url: string | null
+          order_index: number | null
+          is_active: boolean | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          role: string
+          bio?: string | null
+          qualifications?: string | null
+          specialties?: string[] | null
+          image_url?: string | null
+          order_index?: number | null
+          is_active?: boolean | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          role?: string
+          bio?: string | null
+          qualifications?: string | null
+          specialties?: string[] | null
+          image_url?: string | null
+          order_index?: number | null
+          is_active?: boolean | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -297,3 +343,7 @@ export type UpdateBlogPost = Database['public']['Tables']['blog_posts']['Update'
 export type GalleryImage = Database['public']['Tables']['gallery_images']['Row']
 export type NewGalleryImage = Database['public']['Tables']['gallery_images']['Insert']
 export type UpdateGalleryImage = Database['public']['Tables']['gallery_images']['Update']
+
+export type TeamMember = Database['public']['Tables']['team_members']['Row']
+export type NewTeamMember = Database['public']['Tables']['team_members']['Insert']
+export type UpdateTeamMember = Database['public']['Tables']['team_members']['Update']

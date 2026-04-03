@@ -8,11 +8,12 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 
 export const Procedures = () => {
   const [activeTab, setActiveTab] = useState("facial");
-  const [api, setApi] = useState<any>(null);
+  const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
   const activeProc = procedures.find((p) => p.id === activeTab);
 

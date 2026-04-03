@@ -34,16 +34,8 @@ export default defineConfig(({ mode }) => {
         overlay: false,
       },
     },
-    build: {
-      rollupOptions: {
-        external: ["@sentry/react"],
-      },
-    },
     ssr: {
       noExternal: [],
-    },
-    optimizeDeps: {
-      exclude: ["@sentry/react"],
     },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {

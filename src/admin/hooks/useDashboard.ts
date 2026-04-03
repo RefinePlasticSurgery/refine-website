@@ -43,22 +43,20 @@ export const useDashboard = () => {
       // Fetch appointments data
       const { data: appointments, error: apptError } = await supabase
         .from('appointments')
-        .select('*') as { data: Appointment[] | null; error: any };
-      
+        .select('*');
+
       if (apptError) throw apptError;
-      
-      // Fetch blog posts data
+
       const { data: blogPosts, error: blogError } = await supabase
         .from('blog_posts')
-        .select('*') as { data: BlogPost[] | null; error: any };
-      
+        .select('*');
+
       if (blogError) throw blogError;
-      
-      // Fetch gallery images data
+
       const { data: galleryImages, error: galleryError } = await supabase
         .from('gallery_images')
-        .select('*') as { data: GalleryImage[] | null; error: any };
-      
+        .select('*');
+
       if (galleryError) throw galleryError;
       
       // Calculate statistics
@@ -149,8 +147,9 @@ export const useDashboard = () => {
       
       setRecentActivity(sortedActivity);
       
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch dashboard data');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch dashboard data';
+      setError(message);
       console.error('Error fetching dashboard data:', err);
     } finally {
       setLoading(false);

@@ -16,18 +16,12 @@ export const useSidebarToggle = () => {
   }, []);
   
   const toggleSidebar = () => {
-    console.log('[useSidebarToggle] Toggle called, current state:', sidebarOpen);
-    setSidebarOpen(prev => {
-      console.log('[useSidebarToggle] State updating from', prev, 'to', !prev);
-      return !prev;
-    });
+    setSidebarOpen((prev) => !prev);
   };
   const closeSidebar = () => {
-    console.log('[useSidebarToggle] Close called');
     setSidebarOpen(false);
   };
   const openSidebar = () => {
-    console.log('[useSidebarToggle] Open called');
     setSidebarOpen(true);
   };
 

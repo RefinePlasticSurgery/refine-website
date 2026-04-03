@@ -1,78 +1,89 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import type {
+  GalleryImage,
+  NewGalleryImage,
+  UpdateGalleryImage,
+} from '@/integrations/supabase/types';
 
 export const useGallery = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchImages = async () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const { data, error: fetchError } = await supabase
         .from('gallery_images')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (fetchError) throw fetchError;
-      
+
       setImages(data || []);
-    } catch (err) {
-      setError(err.message || 'Failed to fetch gallery images');
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to fetch gallery images';
+      setError(message);
       console.error('Error fetching gallery images:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const uploadImage = async (file, imageData) => {
+  const uploadImage = async (
+    file: File,
+    imageData: Omit<NewGalleryImage, 'image_url'>
+  ) => {
     try {
       setError(null);
-      
-      // Upload file to storage
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
-      
+
       const { error: uploadError } = await supabase.storage
         .from('gallery')
         .upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
+      const { data: urlData } = supabase.storage
         .from('gallery')
         .getPublicUrl(fileName);
 
-      // Insert record
+      const publicUrl = urlData.publicUrl;
+
+      const row: NewGalleryImage = {
+        ...imageData,
+        image_url: publicUrl,
+      };
+
       const { data, error: insertError } = await supabase
         .from('gallery_images')
-        .insert({
-          ...imageData,
-          image_url: publicUrl,
-        })
+        .insert(row)
         .select()
         .single();
 
       if (insertError) throw insertError;
-      
-      // Refresh the list
+
       await fetchImages();
-      
+
       return data;
-    } catch (err) {
-      setError(err.message || 'Failed to upload image');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to upload image';
+      setError(message);
       console.error('Error uploading image:', err);
       return null;
     }
   };
 
-  const updateImage = async (id, updates) => {
+  const updateImage = async (id: string, updates: UpdateGalleryImage) => {
     try {
       setError(null);
-      
+
       const { data, error: updateError } = await supabase
         .from('gallery_images')
         .update(updates)
@@ -81,23 +92,22 @@ export const useGallery = () => {
         .single();
 
       if (updateError) throw updateError;
-      
-      // Refresh the list
+
       await fetchImages();
-      
+
       return data;
-    } catch (err) {
-      setError(err.message || 'Failed to update image');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to update image';
+      setError(message);
       console.error('Error updating image:', err);
       return null;
     }
   };
 
-  const deleteImage = async (id) => {
+  const deleteImage = async (id: string) => {
     try {
       setError(null);
-      
-      // Get image data to delete file
+
       const { data: imageData, error: fetchError } = await supabase
         .from('gallery_images')
         .select('image_url')
@@ -106,28 +116,26 @@ export const useGallery = () => {
 
       if (fetchError) throw fetchError;
 
-      // Delete from storage
       if (imageData?.image_url) {
         const fileName = imageData.image_url.split('/').pop();
-        await supabase.storage
-          .from('gallery')
-          .remove([fileName]);
+        if (fileName) {
+          await supabase.storage.from('gallery').remove([fileName]);
+        }
       }
 
-      // Delete record
       const { error: deleteError } = await supabase
         .from('gallery_images')
         .delete()
         .eq('id', id);
 
       if (deleteError) throw deleteError;
-      
-      // Refresh the list
+
       await fetchImages();
-      
+
       return true;
-    } catch (err) {
-      setError(err.message || 'Failed to delete image');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete image';
+      setError(message);
       console.error('Error deleting image:', err);
       return false;
     }

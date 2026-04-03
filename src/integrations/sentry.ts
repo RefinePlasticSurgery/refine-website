@@ -1,47 +1,31 @@
 /**
  * Sentry Error Tracking Integration
  *
- * This module provides error tracking and monitoring using Sentry (optional).
- * Sentry is only loaded if VITE_SENTRY_DSN is configured.
- *
- * To use Sentry:
- * 1. Install: bun add @sentry/react
- * 2. Create an account at https://sentry.io/
- * 3. Create a new project for React
- * 4. Add VITE_SENTRY_DSN to your .env.production file
- * 5. The integration will automatically initialize when the app loads
- *
- * If Sentry is not configured or installed, the app will work normally
- * with error tracking disabled.
+ * Initializes only when VITE_SENTRY_DSN is set. Uses @sentry/react (bundled with the app).
  */
 
 let sentryInitialized = false;
+let sentryApi: typeof import("@sentry/react") | null = null;
 
-/**
- * Initialize Sentry error tracking
- * Only loads Sentry if DSN is configured and package is installed
- */
 export const initSentry = async () => {
   if (sentryInitialized) return;
-  
+
   const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 
   if (!sentryDsn) {
-    // Suppress log in development - Sentry is optional
     sentryInitialized = true;
     return;
   }
 
   try {
-    // Dynamically import Sentry to avoid requiring it as a dependency
-    // This allows the app to work without Sentry installed
     const Sentry = await import("@sentry/react");
-    
+    sentryApi = Sentry;
+
     Sentry.init({
       dsn: sentryDsn,
       integrations: [
-        new Sentry.BrowserTracing(),
-        new Sentry.Replay({
+        Sentry.browserTracingIntegration(),
+        Sentry.replayIntegration({
           maskAllText: true,
           blockAllMedia: true,
         }),
@@ -55,92 +39,63 @@ export const initSentry = async () => {
     });
 
     sentryInitialized = true;
-    console.log("Sentry initialized successfully");
   } catch (error) {
     sentryInitialized = true;
     console.warn(
-      "Sentry module not found. Install with: bun add @sentry/react",
+      "Sentry module not found or failed to load.",
       error instanceof Error ? error.message : error
     );
   }
 };
 
-/**
- * Capture an exception in Sentry (if available)
- * @param error - The error to capture
- * @param context - Optional context information
- */
-export const captureException = (error: Error, context?: Record<string, any>) => {
+export const captureException = (
+  error: Error,
+  context?: Record<string, unknown>
+) => {
   try {
-    if (typeof window !== "undefined" && (window as any).Sentry) {
-      (window as any).Sentry.captureException(error, {
-        contexts: {
-          custom: context,
-        },
-      });
-    }
-  } catch (err) {
-    // Silently fail if Sentry is not available
+    sentryApi?.captureException(error, {
+      contexts: { custom: context },
+    });
+  } catch {
     console.debug("Sentry not available for error capture");
   }
 };
 
-/**
- * Capture a message in Sentry (if available)
- * @param message - The message to capture
- * @param level - Log level
- * @param context - Optional context information
- */
 export const captureMessage = (
   message: string,
   level: "fatal" | "error" | "warning" | "info" | "debug" = "info",
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ) => {
   try {
-    if (typeof window !== "undefined" && (window as any).Sentry) {
-      (window as any).Sentry.captureMessage(message, level, {
-        contexts: {
-          custom: context,
-        },
-      });
-    }
-  } catch (err) {
+    sentryApi?.captureMessage(message, {
+      level,
+      contexts: { custom: context },
+    });
+  } catch {
     console.debug("Sentry not available for message capture");
   }
 };
 
-/**
- * Set Sentry user context (if available)
- * Useful for identifying which user encountered an error
- */
 export const setSentryUser = (
   userId?: string,
   email?: string,
   username?: string
 ) => {
   try {
-    if (typeof window !== "undefined" && (window as any).Sentry) {
-      (window as any).Sentry.setUser({
-        id: userId,
-        email,
-        username,
-      });
-    }
-  } catch (err) {
+    sentryApi?.setUser({
+      id: userId,
+      email,
+      username,
+    });
+  } catch {
     console.debug("Sentry not available for user context");
   }
 };
 
-/**
- * Clear Sentry user context (if available)
- * Call this when user logs out
- */
 export const clearSentryUser = () => {
   try {
-    if (typeof window !== "undefined" && (window as any).Sentry) {
-      (window as any).Sentry.setUser(null);
-    }
-  } catch (err) {
+    sentryApi?.setUser(null);
+  } catch {
     console.debug("Sentry not available for clearing user context");
   }
 };

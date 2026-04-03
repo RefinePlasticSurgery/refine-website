@@ -326,11 +326,12 @@ const handler = async (req: Request): Promise<Response> => {
         ...cors,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in send-appointment-email function:", error);
+    const message = error instanceof Error ? error.message : "Internal server error";
 
     return new Response(
-      JSON.stringify({ success: false, error: error.message || "Internal server error" }),
+      JSON.stringify({ success: false, error: message }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...cors },

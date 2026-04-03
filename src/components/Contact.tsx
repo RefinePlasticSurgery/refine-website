@@ -7,8 +7,9 @@ import { Phone, Mail, MapPin, Clock, Send, Calendar, Loader2 } from "lucide-reac
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { appointmentFormSchema, type AppointmentFormData } from "@/lib/validations";
-import { sanitizeForStorage, getErrorMessage } from "@/lib/sanitization";
-import { getErrorMessage as getErrorMsg } from "@/lib/errors";
+import { sanitizeForStorage } from "@/lib/sanitization";
+import { getErrorMessage } from "@/lib/errors";
+import { captureException } from "@/integrations/sentry";
 
 interface SubmissionError {
   type: "network" | "validation" | "server" | "rate_limit" | "unknown";
@@ -25,7 +26,7 @@ function getErrorDetails(error: unknown): SubmissionError {
     };
   }
 
-  const errorMessage = getErrorMsg(error);
+  const errorMessage = getErrorMessage(error);
   const errorStr = errorMessage.toLowerCase();
 
   // Network errors
@@ -193,9 +194,8 @@ export const Contact = () => {
         title = "Server Error";
       }
 
-      // Log for monitoring
-      if (typeof window !== "undefined" && (window as any).Sentry) {
-        (window as any).Sentry.captureException(err);
+      if (err instanceof Error) {
+        captureException(err, { source: "Contact.handleSubmit" });
       }
 
       toast({

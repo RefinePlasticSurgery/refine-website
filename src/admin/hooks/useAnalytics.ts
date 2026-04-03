@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Appointment } from '@/integrations/supabase/types';
 
+type MonthlyAppointmentRow = {
+  month: string;
+  appointments: number;
+  revenue: number;
+};
+
 interface AnalyticsData {
   appointmentData: {
     month: string;
@@ -49,8 +55,8 @@ export const useAnalytics = () => {
       // Fetch real appointment data
       const { data: appointments, error: apptError } = await supabase
         .from('appointments')
-        .select('*') as { data: Appointment[] | null; error: any };
-      
+        .select('*');
+
       if (apptError) throw apptError;
       
       // Process appointment data by month
@@ -72,8 +78,9 @@ export const useAnalytics = () => {
         summary
       });
       
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch analytics data');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch analytics data';
+      setError(message);
       console.error('Error fetching analytics data:', err);
     } finally {
       setLoading(false);
@@ -145,7 +152,10 @@ export const useAnalytics = () => {
   };
 
   // Calculate summary statistics
-  const calculateSummary = (appointments: Appointment[], appointmentData: any[]) => {
+  const calculateSummary = (
+    appointments: Appointment[],
+    appointmentData: MonthlyAppointmentRow[]
+  ) => {
     const totalAppointments = appointments.length;
     const totalRevenue = appointmentData.reduce((sum, item) => sum + item.revenue, 0);
     const avgMonthlyAppointments = appointmentData.length > 0 

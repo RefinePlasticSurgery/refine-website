@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSidebarToggle } from '@/admin/hooks/useSidebarToggle';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,30 +21,16 @@ import {
   Mail, 
   Clock, 
   MapPin,
-  User,
   Key,
   Bell,
-  Menu,
-  X
 } from 'lucide-react';
 import { useAuth } from '@/admin/hooks/useAuth';
+import { AdminLayout } from '@/admin/components/AdminLayout';
 
 export const Settings = () => {
-  const { sidebarOpen, closeSidebar, toggleSidebar } = useSidebarToggle();
-  const [windowSize, setWindowSize] = useState({ width: typeof window !== 'undefined' ? window.innerWidth : 1024 });
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
   const { user } = useAuth();
-  const navigate = useNavigate();
-
-  // Track window size for responsive sidebar
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({ width: window.innerWidth });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Form states
   const [generalSettings, setGeneralSettings] = useState({
@@ -70,17 +54,6 @@ export const Settings = () => {
     marketingEmails: false,
     smsNotifications: true
   });
-
-  const menuItems = [
-    { label: 'Dashboard', href: '/admin/dashboard' },
-    { label: 'Appointments', href: '/admin/appointments' },
-    { label: 'Blog', href: '/admin/blog' },
-    { label: 'Gallery', href: '/admin/gallery' },
-    { label: 'Team', href: '/admin/team' },
-    { label: 'Pricing', href: '/admin/pricing' },
-    { label: 'Analytics', href: '/admin/analytics' },
-    { label: 'Settings', href: '/admin/settings' },
-  ];
 
   const handleSaveGeneral = async () => {
     setSaving(true);
@@ -135,105 +108,12 @@ export const Settings = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* Mobile backdrop overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden cursor-pointer"
-          onClick={closeSidebar}
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* Sidebar - Desktop Static, Mobile Fixed */}
-      <div 
-        key={sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}
-        style={{
-          transform: windowSize.width < 1024 
-            ? (sidebarOpen ? 'translateX(0)' : 'translateX(-100%)')
-            : 'translateX(0)',
-          transition: 'transform 300ms ease-in-out',
-          position: windowSize.width < 1024 ? 'fixed' : 'static' as 'fixed' | 'static',
-          pointerEvents: windowSize.width < 1024 && !sidebarOpen ? 'none' : 'auto',
-          top: 0,
-          left: 0,
-          bottom: 0
-        }}
-        className={`z-50 w-64 bg-card border-r border-border flex flex-col`}
-      >
-        {/* Sidebar Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border shrink-0">
-          <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="lg:hidden hover:bg-destructive/10 hover:text-destructive transition-colors"
-            aria-label="Close sidebar navigation menu"
-            onClick={closeSidebar}
-            title="Close sidebar (ESC)"
-          >
-            <X className="w-5 h-5" />
-          </Button>
-        </div>
-        
-        {/* Sidebar Navigation - Scrollable */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-          {menuItems.map((item) => (
-            <Button
-              key={item.href}
-              variant={item.href === '/admin/settings' ? 'secondary' : 'ghost'}
-              className="w-full justify-start py-5 text-left"
-              onClick={() => {
-                navigate(item.href);
-                closeSidebar();
-              }}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </nav>
-        
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-border shrink-0">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <User className="w-5 h-5 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">
-                {user?.email || 'Admin User'}
-              </p>
-              <p className="text-xs text-muted-foreground">Administrator</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content - Shrinks when sidebar visible on desktop */}
-      <div className="flex-1 flex flex-col overflow-hidden w-full">
-        {/* Header */}
-        <header className="relative z-10 bg-card border-b border-border px-6 py-3 h-16 flex items-center">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-3 min-w-0">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={toggleSidebar}
-                aria-label="Toggle sidebar navigation"
-                aria-expanded={sidebarOpen}
-                title="Toggle sidebar menu (ESC to close)"
-                className="hover:bg-accent text-foreground flex-shrink-0"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-              <h2 className="text-2xl font-bold text-foreground truncate">Settings</h2>
-            </div>
-          </div>
-        </header>
-
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-4xl mx-auto">
+    <AdminLayout
+      title="Settings"
+      description={user?.email ? `Workspace · ${user.email}` : "Workspace preferences"}
+      segment="Settings"
+    >
+      <div className="mx-auto max-w-4xl">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="general">General</TabsTrigger>
@@ -496,9 +376,7 @@ export const Settings = () => {
                 </Card>
               </TabsContent>
             </Tabs>
-          </div>
-        </main>
       </div>
-    </div>
+    </AdminLayout>
   );
 };

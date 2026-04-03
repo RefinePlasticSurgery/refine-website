@@ -4,12 +4,13 @@
  */
 
 import DOMPurify from 'isomorphic-dompurify';
+import type { Config } from 'dompurify';
 
 /**
  * Strict configuration for storing user input in database
  * Removes ALL HTML tags and attributes
  */
-const STORAGE_CONFIG: DOMPurify.Config = {
+const STORAGE_CONFIG: Config = {
   ALLOWED_TAGS: [],
   ALLOWED_ATTR: [],
   KEEP_CONTENT: true,
@@ -19,7 +20,7 @@ const STORAGE_CONFIG: DOMPurify.Config = {
  * Lenient configuration for displaying trusted HTML content
  * Only allows safe formatting tags
  */
-const DISPLAY_CONFIG: DOMPurify.Config = {
+const DISPLAY_CONFIG: Config = {
   ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
   ALLOWED_ATTR: ['href', 'title', 'target'],
 };
@@ -36,7 +37,7 @@ export const sanitizeForStorage = (input: string): string => {
     return '';
   }
 
-  return DOMPurify.sanitize(input, STORAGE_CONFIG);
+  return DOMPurify.sanitize(input, STORAGE_CONFIG) as string;
 };
 
 /**
@@ -51,7 +52,7 @@ export const sanitizeForDisplay = (input: string): string => {
     return '';
   }
 
-  return DOMPurify.sanitize(input, DISPLAY_CONFIG);
+  return DOMPurify.sanitize(input, DISPLAY_CONFIG) as string;
 };
 
 /**

@@ -9,7 +9,15 @@
 export class AuthError extends Error {
   constructor(
     message: string,
-    public code: 'INVALID_CREDENTIALS' | 'USER_NOT_FOUND' | 'NETWORK_ERROR' | 'SESSION_EXPIRED' | 'PERMISSION_DENIED' | 'UNKNOWN'
+    public code:
+      | 'INVALID_CREDENTIALS'
+      | 'USER_NOT_FOUND'
+      | 'NETWORK_ERROR'
+      | 'SESSION_EXPIRED'
+      | 'PERMISSION_DENIED'
+      | 'ADMIN_NOT_CONFIGURED'
+      | 'SIGN_IN_FAILED'
+      | 'UNKNOWN'
   ) {
     super(message);
     this.name = 'AuthError';
@@ -59,8 +67,17 @@ export const handleSupabaseAuthError = (error: unknown): AuthError => {
     if (message.includes('user not found')) {
       return new AuthError('User not found', 'USER_NOT_FOUND');
     }
-    if (message.includes('network') || message.includes('fetch')) {
-      return new AuthError('Network connection failed. Please check your internet and try again.', 'NETWORK_ERROR');
+    if (
+      message.includes('network') ||
+      message.includes('fetch') ||
+      message.includes('failed to fetch') ||
+      message.includes('name not resolved') ||
+      message.includes('err_name_not_resolved')
+    ) {
+      return new AuthError(
+        'Cannot reach the authentication server. Check your internet connection and that VITE_SUPABASE_URL in your environment is correct.',
+        'NETWORK_ERROR'
+      );
     }
     if (message.includes('session') || message.includes('expired')) {
       return new AuthError('Your session has expired. Please sign in again.', 'SESSION_EXPIRED');

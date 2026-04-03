@@ -46,7 +46,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
       
       const { data, error: createError } = await supabase
         .from('appointments')
-        .insert([appointment])
+        .insert(appointment)
         .select()
         .single();
 
