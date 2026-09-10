@@ -17,46 +17,32 @@ CREATE TABLE IF NOT EXISTS team_members (
 CREATE INDEX IF NOT EXISTS team_members_active_idx ON team_members (is_active);
 CREATE INDEX IF NOT EXISTS team_members_order_idx ON team_members (order_index);
 
--- Create admin_users view for policy checks
-CREATE OR REPLACE VIEW admin_users AS
-SELECT id AS id,
-       CASE
-         WHEN id = '00000000-0000-0000-0000-000000000001' THEN 'admin'   -- replace with real admin UID(s)
-         ELSE 'user'
-       END AS role
-FROM auth.users;
+-- Drop the insecure admin_users view if it still exists in the database
+DROP VIEW IF EXISTS public.admin_users CASCADE;
 
 -- Enable Row Level Security
 ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
 
--- Create policies
-CREATE POLICY "Team members are viewable by everyone" 
-    ON team_members FOR SELECT 
+-- Create policies (idempotent)
+DROP POLICY IF EXISTS "Team members are viewable by everyone" ON team_members;
+CREATE POLICY "Team members are viewable by everyone"
+    ON team_members FOR SELECT
     USING (true);
 
-CREATE POLICY "Team members can be inserted by admins" 
-    ON team_members FOR INSERT 
-    WITH CHECK (EXISTS (
-        SELECT 1 FROM admin_users 
-        WHERE admin_users.id = auth.uid() 
-        AND admin_users.role = 'admin'
-    ));
+DROP POLICY IF EXISTS "Team members can be inserted by admins" ON team_members;
+CREATE POLICY "Team members can be inserted by admins"
+    ON team_members FOR INSERT
+    WITH CHECK (auth.uid() = '4181663c-4b85-4c6b-93ca-2524a0cec5d6');
 
-CREATE POLICY "Team members can be updated by admins" 
-    ON team_members FOR UPDATE 
-    USING (EXISTS (
-        SELECT 1 FROM admin_users 
-        WHERE admin_users.id = auth.uid() 
-        AND admin_users.role = 'admin'
-    ));
+DROP POLICY IF EXISTS "Team members can be updated by admins" ON team_members;
+CREATE POLICY "Team members can be updated by admins"
+    ON team_members FOR UPDATE
+    USING (auth.uid() = '4181663c-4b85-4c6b-93ca-2524a0cec5d6');
 
-CREATE POLICY "Team members can be deleted by admins" 
-    ON team_members FOR DELETE 
-    USING (EXISTS (
-        SELECT 1 FROM admin_users 
-        WHERE admin_users.id = auth.uid() 
-        AND admin_users.role = 'admin'
-    ));
+DROP POLICY IF EXISTS "Team members can be deleted by admins" ON team_members;
+CREATE POLICY "Team members can be deleted by admins"
+    ON team_members FOR DELETE
+    USING (auth.uid() = '4181663c-4b85-4c6b-93ca-2524a0cec5d6');
 
 -- Insert sample team data
 INSERT INTO team_members (name, role, bio, qualifications, specialties, order_index) VALUES
