@@ -13,6 +13,9 @@ export const useSidebar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [ready, setReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
+  );
 
   // Hydrate collapsed state from localStorage after mount (avoids SSR mismatch)
   useEffect(() => {
@@ -24,13 +27,16 @@ export const useSidebar = () => {
     setReady(true);
   }, []);
 
-  // Close mobile drawer when viewport grows to desktop
   useEffect(() => {
-    const handler = () => {
-      if (window.innerWidth >= 1024) setMobileOpen(false);
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const sync = () => {
+      const mobile = mq.matches;
+      setIsMobile(mobile);
+      if (!mobile) setMobileOpen(false);
     };
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
   }, []);
 
   // Close mobile drawer on Escape
@@ -66,6 +72,7 @@ export const useSidebar = () => {
     /** collapsed is false until localStorage has been read */
     collapsed: ready ? collapsed : false,
     toggleCollapsed,
+    isMobile,
     ready,
   };
 };

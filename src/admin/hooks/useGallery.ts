@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { GalleryImage, NewGalleryImage, UpdateGalleryImage } from '@/integrations/supabase/types';
 import { queryKeys } from '@/lib/query-keys';
+import { handleSupabaseDatabaseError } from '@/lib/errors';
 
 // ─── Fetch ────────────────────────────────────────────────────────────────────
 
@@ -10,7 +11,7 @@ async function fetchGalleryImages(): Promise<GalleryImage[]> {
     .from('gallery_images')
     .select('*')
     .order('created_at', { ascending: false });
-  if (error) throw error;
+  if (error) throw handleSupabaseDatabaseError(error);
   return data ?? [];
 }
 
@@ -51,7 +52,7 @@ export const useGallery = () => {
       const { error: uploadError } = await supabase.storage
         .from('gallery')
         .upload(fileName, file);
-      if (uploadError) throw uploadError;
+      if (uploadError) throw handleSupabaseDatabaseError(uploadError);
 
       const { data: urlData } = supabase.storage.from('gallery').getPublicUrl(fileName);
 
@@ -61,7 +62,7 @@ export const useGallery = () => {
         .insert(row)
         .select()
         .single();
-      if (insertError) throw insertError;
+      if (insertError) throw handleSupabaseDatabaseError(insertError);
       return data;
     },
     onSuccess: () => {
@@ -83,7 +84,7 @@ export const useGallery = () => {
         .eq('id', id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return data;
     },
     onSuccess: (updated) => {
@@ -104,7 +105,7 @@ export const useGallery = () => {
         .select('image_url')
         .eq('id', id)
         .single();
-      if (fetchError) throw fetchError;
+      if (fetchError) throw handleSupabaseDatabaseError(fetchError);
 
       if (imageData?.image_url) {
         const fileName = fileNameFromUrl(imageData.image_url);
@@ -118,7 +119,7 @@ export const useGallery = () => {
         .from('gallery_images')
         .delete()
         .eq('id', id);
-      if (deleteError) throw deleteError;
+      if (deleteError) throw handleSupabaseDatabaseError(deleteError);
       return id;
     },
     onSuccess: (deletedId) => {

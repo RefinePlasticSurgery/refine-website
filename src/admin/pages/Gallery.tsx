@@ -343,20 +343,20 @@ export const Gallery = () => {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
           {filteredImages.map((image) => (
             <div
               key={image.id}
-              className="group overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition hover:shadow-md"
+              className="group mb-5 break-inside-avoid overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition hover:shadow-md"
             >
-              <div className="relative aspect-square bg-muted">
+              <div className="relative bg-muted">
                 <img
                   src={image.image_url}
                   alt={image.title || "Gallery image"}
-                  className="h-full w-full object-cover"
+                  className="w-full object-cover"
                 />
 
-                <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition group-hover:opacity-100 group-hover:bg-black/35">
+                <div className="absolute inset-0 flex items-center justify-center gap-2 bg-slate-950/0 opacity-0 transition group-hover:bg-slate-950/45 group-hover:opacity-100">
                   <Button
                     variant="secondary"
                     size="sm"

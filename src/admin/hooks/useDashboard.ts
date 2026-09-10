@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { queryKeys } from '@/lib/query-keys';
+import { handleSupabaseDatabaseError } from '@/lib/errors';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,18 +41,7 @@ async function fetchDashboardData(): Promise<DashboardData> {
   thisMonthStart.setDate(1);
   thisMonthStart.setHours(0, 0, 0, 0);
 
-  const [
-    { count: totalAppointments },
-    { count: pendingAppointments },
-    { count: confirmedAppointments },
-    { count: thisMonthAppointments },
-    { count: totalBlogPosts },
-    { count: publishedBlogPosts },
-    { count: totalGalleryImages },
-    { data: recentAppts },
-    { data: recentPosts },
-    { data: recentImages },
-  ] = await Promise.all([
+  const results = await Promise.all([
     supabase.from('appointments').select('*', { count: 'exact', head: true }),
     supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
     supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
@@ -79,6 +69,22 @@ async function fetchDashboardData(): Promise<DashboardData> {
       .limit(3),
   ]);
 
+  const failed = results.find((r) => r.error);
+  if (failed?.error) throw handleSupabaseDatabaseError(failed.error);
+
+  const [
+    { count: totalAppointments },
+    { count: pendingAppointments },
+    { count: confirmedAppointments },
+    { count: thisMonthAppointments },
+    { count: totalBlogPosts },
+    { count: publishedBlogPosts },
+    { count: totalGalleryImages },
+    { data: recentAppts },
+    { data: recentPosts },
+    { data: recentImages },
+  ] = results;
+
   const total = totalAppointments ?? 0;
   const confirmed = confirmedAppointments ?? 0;
   const conversionRate = total > 0 ? Math.round((confirmed / total) * 100) : 0;
@@ -98,16 +104,16 @@ async function fetchDashboardData(): Promise<DashboardData> {
     ...(recentAppts ?? []).map(a => ({
       id: a.id,
       type: 'appointment' as const,
-      title: `New appointment: ${a.name}`,
+      title: `New appointment: ${a.name ?? 'Unknown'}`,
       timestamp: a.created_at,
-      status: a.status,
+      status: a.status ?? undefined,
     })),
     ...(recentPosts ?? []).map(p => ({
       id: p.id,
       type: 'blog' as const,
-      title: `Blog post: ${p.title}`,
+      title: `Blog post: ${p.title ?? 'Untitled'}`,
       timestamp: p.created_at,
-      status: p.status,
+      status: p.status ?? undefined,
     })),
     ...(recentImages ?? []).map(img => ({
       id: img.id,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAnalytics } from "@/admin/hooks/useAnalytics";
 import {
@@ -16,14 +16,53 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Calendar, TrendingUp, Users, CalendarDays } from "lucide-react";
+import { Calendar, TrendingUp, Users } from "lucide-react";
 import { AdminLayout } from "@/admin/components/AdminLayout";
+
+function KpiRing({
+  value,
+  max = 100,
+  color,
+}: {
+  value: number;
+  max?: number;
+  color: string;
+}) {
+  const r = 28;
+  const c = 2 * Math.PI * r;
+  const pct = max > 0 ? Math.min(Math.max(value / max, 0), 1) : 0;
+  return (
+    <svg viewBox="0 0 72 72" className="h-14 w-14 -rotate-90">
+      <circle cx="36" cy="36" r={r} fill="none" stroke="currentColor" className="text-slate-100" strokeWidth="7" />
+      <circle
+        cx="36"
+        cy="36"
+        r={r}
+        fill="none"
+        stroke={color}
+        strokeWidth="7"
+        strokeLinecap="round"
+        strokeDasharray={c}
+        strokeDashoffset={c * (1 - pct)}
+      />
+    </svg>
+  );
+}
 
 export const Analytics = () => {
   const [timeRange, setTimeRange] = useState("6months");
   const { data, loading, error } = useAnalytics();
 
   const { appointmentData, procedureData, statusData, summary } = data;
+
+  const monthsVisible =
+    timeRange === "1month" ? 1 : timeRange === "3months" ? 3 : timeRange === "1year" ? 12 : 6;
+
+  const filteredAppointmentData = useMemo(() => {
+    if (appointmentData.length <= monthsVisible) return appointmentData;
+    return appointmentData.slice(-monthsVisible);
+  }, [appointmentData, monthsVisible]);
+
   const { totalAppointments, totalRevenue, avgMonthlyAppointments, conversionRate } = summary;
 
   if (loading) {
@@ -51,7 +90,7 @@ export const Analytics = () => {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
-            className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+            className="h-9 rounded-full border border-input bg-white px-3 text-sm"
             aria-label="Time range"
           >
             <option value="1month">Last 30 days</option>
@@ -65,7 +104,6 @@ export const Analytics = () => {
           </Button>
         </>
       }
-      contentClassName="!px-0 !py-0 lg:!px-0 lg:!py-0"
     >
       {error && (
         <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
@@ -73,76 +111,54 @@ export const Analytics = () => {
         </div>
       )}
 
-      <div className="border-b border-border/60 bg-muted/30 px-4 py-6 lg:px-8">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Appointments
-                </p>
-                <p className="mt-2 font-serif text-3xl font-bold">{totalAppointments}</p>
-                <p className="mt-1 text-xs text-emerald-600">Pipeline total</p>
-              </div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500/15 text-sky-600">
-                <Calendar className="h-5 w-5" />
-              </div>
-            </div>
+      <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="flex items-center justify-between rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Appointments</p>
+            <p className="mt-2 font-serif text-3xl font-bold">{totalAppointments}</p>
+            <p className="mt-1 text-xs text-emerald-600">Pipeline total</p>
           </div>
-          <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Revenue (est.)
-                </p>
-                <p className="mt-2 font-serif text-2xl font-bold tabular-nums">
-                  TZS {totalRevenue.toLocaleString()}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">Illustrative</p>
-              </div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600">
-                <TrendingUp className="h-5 w-5" />
-              </div>
-            </div>
+          <KpiRing value={Math.min(totalAppointments, 40)} max={40} color="#0ea5e9" />
+        </div>
+        <div className="flex items-center justify-between rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Revenue (est.)</p>
+            <p className="mt-2 font-serif text-xl font-bold tabular-nums">
+              TZS {totalRevenue.toLocaleString()}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">Illustrative</p>
           </div>
-          <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Avg / active month
-                </p>
-                <p className="mt-2 font-serif text-3xl font-bold">{avgMonthlyAppointments}</p>
-                <p className="mt-1 text-xs text-muted-foreground">Based on chart months</p>
-              </div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
-                <Users className="h-5 w-5" />
-              </div>
-            </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600">
+            <TrendingUp className="h-5 w-5" />
           </div>
-          <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Conversion
-                </p>
-                <p className="mt-2 font-serif text-3xl font-bold">{conversionRate}%</p>
-                <p className="mt-1 text-xs text-muted-foreground">Confirmed / total</p>
-              </div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600">
-                <CalendarDays className="h-5 w-5" />
-              </div>
-            </div>
+        </div>
+        <div className="flex items-center justify-between rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Avg / active month</p>
+            <p className="mt-2 font-serif text-3xl font-bold">{avgMonthlyAppointments}</p>
+            <p className="mt-1 text-xs text-slate-500">Based on chart months</p>
           </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
+            <Users className="h-5 w-5" />
+          </div>
+        </div>
+        <div className="flex items-center justify-between rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Conversion</p>
+            <p className="mt-2 font-serif text-3xl font-bold">{conversionRate}%</p>
+            <p className="mt-1 text-xs text-slate-500">Confirmed / total</p>
+          </div>
+          <KpiRing value={conversionRate} color="#8b5cf6" />
         </div>
       </div>
 
-      <div className="space-y-6 px-4 py-6 lg:px-8 lg:py-8">
+      <div className="space-y-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm">
-            <h3 className="mb-4 font-semibold text-foreground">Appointments by month</h3>
+          <div className="rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm">
+            <h3 className="mb-4 font-serif font-semibold text-slate-900">Appointments by month</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={appointmentData}>
+                <BarChart data={filteredAppointmentData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
@@ -161,11 +177,11 @@ export const Analytics = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm">
-            <h3 className="mb-4 font-semibold text-foreground">Revenue trend</h3>
+          <div className="rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm">
+            <h3 className="mb-4 font-serif font-semibold text-slate-900">Revenue trend</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={appointmentData}>
+                <LineChart data={filteredAppointmentData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
@@ -188,8 +204,8 @@ export const Analytics = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm">
-            <h3 className="mb-4 font-semibold text-foreground">Procedure mix</h3>
+          <div className="rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm">
+            <h3 className="mb-4 font-serif font-semibold text-slate-900">Procedure mix</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -215,8 +231,8 @@ export const Analytics = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm">
-            <h3 className="mb-4 font-semibold text-foreground">Status mix</h3>
+          <div className="rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm">
+            <h3 className="mb-4 font-serif font-semibold text-slate-900">Status mix</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>

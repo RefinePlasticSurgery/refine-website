@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { TeamMember, NewTeamMember, UpdateTeamMember } from '@/integrations/supabase/types';
 import { queryKeys } from '@/lib/query-keys';
+import { handleSupabaseDatabaseError } from '@/lib/errors';
 
 // ─── Fetch ────────────────────────────────────────────────────────────────────
 
@@ -10,7 +11,7 @@ async function fetchTeamMembers(): Promise<TeamMember[]> {
     .from('team_members')
     .select('*')
     .order('order_index', { ascending: true });
-  if (error) throw error;
+  if (error) throw handleSupabaseDatabaseError(error);
   return data ?? [];
 }
 
@@ -36,7 +37,7 @@ export const useTeam = () => {
         })
         .select()
         .single();
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return data;
     },
     onSuccess: () => {
@@ -58,7 +59,7 @@ export const useTeam = () => {
         .eq('id', id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return data;
     },
     onSuccess: (updated) => {
@@ -75,7 +76,7 @@ export const useTeam = () => {
   const deleteMutation = useMutation({
     mutationFn: async (id: string): Promise<string> => {
       const { error } = await supabase.from('team_members').delete().eq('id', id);
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return id;
     },
     onSuccess: (deletedId) => {

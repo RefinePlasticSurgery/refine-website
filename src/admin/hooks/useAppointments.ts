@@ -28,11 +28,21 @@ export const getAppointmentStatusLabel = (status: string): string => {
 async function fetchAppointments(): Promise<Appointment[]> {
   const { data, error } = await supabase
     .from('appointments')
-    .select('*')
+    .select('id, name, email, phone, procedure, preferred_date, message, status, created_at, updated_at')
     .order('created_at', { ascending: false });
 
   if (error) throw handleSupabaseDatabaseError(error);
-  return data ?? [];
+
+  return (data ?? []).map((row) => ({
+    ...row,
+    name: row.name ?? '',
+    email: row.email ?? '',
+    phone: row.phone ?? '',
+    procedure: row.procedure ?? '',
+    status: row.status ?? 'pending',
+    preferred_date: row.preferred_date ?? null,
+    message: row.message ?? null,
+  }));
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────

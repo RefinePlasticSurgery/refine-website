@@ -56,12 +56,12 @@ const Field = ({
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="
-          block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5
-          text-sm text-gray-900 placeholder-gray-400 shadow-sm
+          className="
+          block w-full rounded-lg border border-[hsl(20_20%_88%)] bg-white px-3.5 py-2.5
+          text-sm text-[hsl(220_30%_15%)] placeholder-[hsl(220_15%_45%/0.55)] shadow-sm
           outline-none ring-0
           transition-[border-color,box-shadow]
-          focus:border-[hsl(var(--primary))] focus:shadow-[0_0_0_3px_hsl(var(--primary)/0.15)]
+          focus:border-[hsl(330_75%_45%)] focus:shadow-[0_0_0_3px_hsl(330_75%_45%/0.15)]
           disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500
         "
         style={{ paddingRight: suffix ? '2.75rem' : undefined }}
@@ -145,9 +145,13 @@ export const AdminLogin = () => {
           LEFT PANEL — 50% — Brand pink, logo, feature list
       ═══════════════════════════════════════════════════════════════ */}
       <div
-        className="hidden lg:flex lg:w-1/2 xl:w-1/2 shrink-0 flex-col justify-between p-12 xl:p-16"
-        style={{ backgroundColor: 'hsl(var(--primary))' }}
+        className="relative hidden overflow-hidden lg:flex lg:w-1/2 xl:w-1/2 shrink-0 flex-col justify-between p-12 xl:p-16"
+        style={{ background: 'linear-gradient(160deg, hsl(330 75% 45%) 0%, hsl(330 80% 32%) 55%, hsl(330 70% 18%) 100%)' }}
       >
+        <div className="pointer-events-none absolute -left-16 top-24 h-72 w-64 rounded-full bg-white/10 blur-3xl animate-float" />
+        <div className="pointer-events-none absolute bottom-24 -right-10 h-56 w-56 rounded-full bg-white/10 blur-3xl animate-float-delayed" />
+        <div className="pointer-events-none absolute left-1/3 top-1/2 h-24 w-24 rounded-full border border-white/15" />
+        <div className="pointer-events-none absolute right-16 top-32 h-16 w-16 rotate-12 rounded-2xl border border-white/20" />
         {/* ── Logo ── */}
         <div className="flex items-center gap-3">
           {/*
@@ -212,7 +216,7 @@ export const AdminLogin = () => {
       {/* ═══════════════════════════════════════════════════════════════
           RIGHT PANEL — 50% — White, sign-in form
       ═══════════════════════════════════════════════════════════════ */}
-      <div className="flex w-full flex-col items-center justify-center bg-white px-6 py-12 lg:w-1/2 sm:px-12 lg:px-16 xl:px-20">
+      <div className="flex w-full flex-col items-center justify-center bg-[hsl(20_50%_97%)] px-6 py-12 lg:w-1/2 sm:px-12 lg:px-16 xl:px-20">
 
         {/* Mobile-only logo */}
         <div className="mb-10 flex flex-col items-center gap-3 lg:hidden">
@@ -227,7 +231,7 @@ export const AdminLogin = () => {
 
         {/* Card — max width keeps it readable on ultra-wide screens */}
         <div
-          className="w-full max-w-[420px]"
+          className="w-full max-w-[440px] rounded-2xl border border-white/80 bg-white/80 p-8 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.18)] backdrop-blur-xl"
           style={{
             opacity:    ready ? 1 : 0,
             transform:  ready ? 'none' : 'translateY(12px)',

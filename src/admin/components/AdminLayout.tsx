@@ -6,12 +6,12 @@ import {
   PanelLeft,
   LogOut,
   ChevronRight,
-  Sparkles,
+  ExternalLink,
+  Bell,
 } from "lucide-react";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
@@ -21,7 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
@@ -34,18 +33,14 @@ import { useSidebar } from "@/admin/hooks/useSidebar";
 import { ADMIN_NAV_ITEMS } from "@/admin/config/navigation";
 import logo from "@/assets/logo.png";
 
-const SIDEBAR_WIDE   = "w-[280px]";
-const SIDEBAR_NARROW = "w-[76px]";
-/** Must match useSidebar's resize threshold */
-const LG_BREAKPOINT  = 1024;
+const SIDEBAR_WIDE   = "w-[256px]";
+const SIDEBAR_NARROW = "w-[68px]";
 
 type AdminLayoutProps = {
   title: string;
   description?: string;
-  /** Breadcrumb segment label (falls back to title) */
   segment?: string;
   headerActions?: ReactNode;
-  /** Optional strip below the header (filters, tabs, search) */
   toolbar?: ReactNode;
   children: ReactNode;
   contentClassName?: string;
@@ -63,26 +58,13 @@ export function AdminLayout({
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ Single consolidated hook — replaces useSidebarToggle + useAdminSidebarCollapsed
-  const {
-    mobileOpen,
-    toggleMobile,
-    closeMobile,
-    collapsed,
-    toggleCollapsed,
-    ready,
-  } = useSidebar();
+  const { mobileOpen, toggleMobile, closeMobile, collapsed, toggleCollapsed, isMobile, ready } = useSidebar();
 
-  // ✅ Memoised — value only changes when the viewport crosses LG_BREAKPOINT, not on every render
-  const isMobile = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < LG_BREAKPOINT;
-  }, []);
-
-  // ✅ Date computed once per mount — format() + new Date() no longer called on every render
   const todayLabel = useMemo(() => format(new Date(), "EEE, MMM d"), []);
-
   const sidebarExpanded = !ready || isMobile || !collapsed;
+
+  const userInitials = user?.email ? user.email.slice(0, 2).toUpperCase() : "A";
+  const userEmail = user?.email ?? "Admin";
 
   const handleSignOut = async () => {
     await signOut();
@@ -91,89 +73,109 @@ export function AdminLayout({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="flex min-h-screen w-full bg-muted/40 text-foreground">
-        {/* Mobile overlay */}
+      {/* Root: exactly viewport height, no scroll on the shell */}
+      <div className="flex h-screen w-full overflow-hidden bg-[#f8f5f2] text-foreground">
+
+        {/* ── Mobile overlay ─────────────────────────────────────── */}
         {isMobile && mobileOpen && (
           <button
             type="button"
-            className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
             aria-label="Close menu"
             onClick={closeMobile}
           />
         )}
 
-        {/* Sidebar */}
+        {/* ═══════════════════════════════════════════════════════
+            SIDEBAR
+        ═══════════════════════════════════════════════════════ */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 shadow-xl transition-[transform,width] duration-300 ease-out lg:static lg:translate-x-0",
+            "fixed inset-y-0 left-0 z-50 flex h-full flex-col transition-[transform,width] duration-300 ease-out lg:static lg:translate-x-0",
+            // Background: very dark navy
+            "bg-[#0d1117]",
             isMobile
-              ? "w-[min(280px,100vw)]"
+              ? "w-[min(256px,88vw)] shadow-2xl"
               : sidebarExpanded
               ? SIDEBAR_WIDE
               : SIDEBAR_NARROW,
             isMobile && !mobileOpen && "-translate-x-full"
           )}
         >
-          {/* Logo */}
+          {/* ── Brand header ─────────────────────────────────── */}
           <div
             className={cn(
-              "flex h-16 shrink-0 items-center gap-2 border-b border-white/10 px-4",
-              !sidebarExpanded && "justify-center px-2"
+              "flex h-[64px] shrink-0 items-center gap-3 px-4",
+              !sidebarExpanded && "justify-center px-0"
             )}
           >
+            {/* Logo mark with pink glow */}
             <div
               className={cn(
-                "flex min-w-0 flex-1 items-center gap-3",
-                !sidebarExpanded && "justify-center"
+                "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                "bg-[hsl(330_75%_45%)] shadow-[0_0_20px_hsl(330_75%_45%/0.4)]"
               )}
             >
-              <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/10">
-                <img src={logo} alt="" className="h-full w-full object-contain p-1" />
-              </div>
-              {sidebarExpanded && (
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="truncate font-serif text-lg font-semibold tracking-tight text-white">
-                      Refine
-                    </span>
-                    <Sparkles className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
-                  </div>
-                  <p className="truncate text-[11px] font-medium uppercase tracking-widest text-slate-500">
-                    Admin Console
-                  </p>
-                </div>
-              )}
+              <img src={logo} alt="" className="h-6 w-6 object-contain brightness-0 invert" />
             </div>
+
+            {sidebarExpanded && (
+              <div className="min-w-0 flex-1">
+                <p className="font-serif text-[16px] font-semibold leading-tight text-white">
+                  Refine
+                </p>
+                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[hsl(330_75%_60%)]">
+                  Admin Console
+                </p>
+              </div>
+            )}
+
             {isMobile && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 text-slate-400 hover:bg-white/10 hover:text-white"
+              <button
+                type="button"
                 onClick={closeMobile}
+                className="ml-auto rounded-lg p-1.5 text-white/40 transition hover:bg-white/10 hover:text-white"
                 aria-label="Close navigation"
               >
-                <PanelLeftClose className="h-5 w-5" />
-              </Button>
+                <PanelLeftClose className="h-4 w-4" />
+              </button>
             )}
           </div>
 
-          {/* Nav items */}
-          <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+          {/* Thin pink accent line under brand */}
+          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-[hsl(330_75%_45%/0.5)] to-transparent" />
+
+          {/* ── Navigation ───────────────────────────────────── */}
+          <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-4 scrollbar-none">
+            {sidebarExpanded && (
+              <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/20">
+                Menu
+              </p>
+            )}
+
             {ADMIN_NAV_ITEMS.map((item) => {
               const Icon = item.icon;
-              const inner = (
+
+              const navInner = (
                 <NavLink
-                  key={item.href}
                   to={item.href}
                   end={item.href === "/admin/dashboard"}
                   onClick={() => isMobile && closeMobile()}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-sm font-medium transition-all",
-                      !sidebarExpanded && "justify-center px-2",
+                      "group relative flex items-center gap-3 rounded-xl text-sm font-medium transition-all duration-150",
+                      sidebarExpanded ? "px-3 py-2.5" : "justify-center px-0 py-3",
                       isActive
-                        ? "border-primary/30 bg-primary/15 text-white shadow-[0_0_20px_-8px_hsl(var(--primary))]"
-                        : "text-slate-400 hover:border-white/10 hover:bg-white/5 hover:text-white"
+                        ? [
+                            // Active: filled pink background
+                            "bg-[hsl(330_75%_45%/0.15)] text-white",
+                            // Left accent bar
+                            "before:absolute before:inset-y-1.5 before:left-0 before:w-[3px] before:rounded-r-full",
+                            "before:bg-[hsl(330_75%_55%)] before:shadow-[0_0_8px_hsl(330_75%_55%)]",
+                          ]
+                        : [
+                            "text-white/40 hover:bg-white/[0.06] hover:text-white/80",
+                          ]
                     )
                   }
                 >
@@ -181,8 +183,10 @@ export function AdminLayout({
                     <>
                       <Icon
                         className={cn(
-                          "h-5 w-5 shrink-0",
-                          isActive ? "text-primary" : "text-slate-500"
+                          "h-[18px] w-[18px] shrink-0 transition-colors",
+                          isActive
+                            ? "text-[hsl(330_75%_60%)]"
+                            : "text-white/35 group-hover:text-white/70"
                         )}
                       />
                       {sidebarExpanded && (
@@ -196,82 +200,100 @@ export function AdminLayout({
               if (!sidebarExpanded && !isMobile) {
                 return (
                   <Tooltip key={item.href}>
-                    <TooltipTrigger asChild>{inner}</TooltipTrigger>
+                    <TooltipTrigger asChild>{navInner}</TooltipTrigger>
                     <TooltipContent side="right" className="font-medium">
                       {item.title}
                     </TooltipContent>
                   </Tooltip>
                 );
               }
-              return inner;
+              return <div key={item.href}>{navInner}</div>;
             })}
           </nav>
 
-          {/* Footer: collapse toggle + user menu */}
-          <div className="shrink-0 border-t border-white/10 p-3">
+          {/* ── Footer ───────────────────────────────────────── */}
+          <div className="shrink-0 space-y-1 p-2">
+            {/* View site */}
+            {sidebarExpanded && (
+              <a
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-white/30 transition hover:bg-white/[0.06] hover:text-white/60"
+              >
+                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                View public site
+              </a>
+            )}
+
+            {/* Collapse toggle (desktop only) */}
             {!isMobile && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "mb-2 w-full justify-center gap-2 text-slate-400 hover:bg-white/5 hover:text-white",
-                  sidebarExpanded && "justify-start"
-                )}
+              <button
+                type="button"
                 onClick={toggleCollapsed}
                 aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className={cn(
+                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-white/30 transition hover:bg-white/[0.06] hover:text-white/60",
+                  !sidebarExpanded && "justify-center px-0"
+                )}
               >
                 {sidebarExpanded ? (
                   <>
-                    <PanelLeftClose className="h-4 w-4" />
-                    <span className="text-xs">Collapse</span>
+                    <PanelLeftClose className="h-3.5 w-3.5 shrink-0" />
+                    <span>Collapse</span>
                   </>
                 ) : (
-                  <PanelLeft className="h-4 w-4" />
+                  <PanelLeft className="h-3.5 w-3.5" />
                 )}
-              </Button>
+              </button>
             )}
 
+            {/* Divider */}
+            <div className="mx-1 h-px bg-white/[0.06]" />
+
+            {/* User pill */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-2 text-left transition hover:bg-white/10",
-                    !sidebarExpanded && "justify-center p-2"
+                    "flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-white/[0.06]",
+                    !sidebarExpanded && "justify-center"
                   )}
                 >
-                  <Avatar className="h-9 w-9 border border-white/10">
-                    <AvatarFallback className="bg-primary/20 text-sm font-semibold text-primary">
-                      {user?.email?.charAt(0).toUpperCase() ?? "A"}
-                    </AvatarFallback>
-                  </Avatar>
+                  {/* Avatar */}
+                  <div
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold"
+                    style={{
+                      background: "hsl(330 75% 45% / 0.2)",
+                      color: "hsl(330 75% 65%)",
+                    }}
+                  >
+                    {userInitials}
+                  </div>
                   {sidebarExpanded && (
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-white">
-                        {user?.email ?? "Admin"}
-                      </p>
-                      <p className="truncate text-xs text-slate-500">Administrator</p>
+                    <div className="min-w-0 flex-1 text-left">
+                      <p className="truncate text-[12px] font-semibold text-white/80">{userEmail}</p>
+                      <p className="truncate text-[10px] text-white/30">Administrator</p>
                     </div>
                   )}
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Account</DropdownMenuLabel>
+
+              <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuLabel className="text-[11px] text-muted-foreground font-normal">
+                  Signed in as
+                </DropdownMenuLabel>
+                <DropdownMenuLabel className="-mt-1 truncate text-xs">
+                  {userEmail}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    navigate("/admin/settings");
-                    closeMobile();
-                  }}
-                >
+                <DropdownMenuItem onClick={() => { navigate("/admin/settings"); closeMobile(); }}>
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="text-destructive focus:text-destructive"
-                  onClick={handleSignOut}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
+                <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-3.5 w-3.5" />
                   Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -279,74 +301,87 @@ export function AdminLayout({
           </div>
         </aside>
 
-        {/* Main column */}
-        <div className="flex min-w-0 flex-1 flex-col">
-          {/* Sticky top header */}
-          <header className="sticky top-0 z-30 border-b border-border/60 bg-card/85 backdrop-blur-md">
-            <div className="flex h-16 items-center gap-4 px-4 lg:px-8">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 lg:hidden"
+        {/* ═══════════════════════════════════════════════════════
+            MAIN COLUMN
+        ═══════════════════════════════════════════════════════ */}
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+
+          {/* ── Header ────────────────────────────────────────── */}
+          <header className="shrink-0 border-b border-black/[0.06] bg-white shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+            <div className="flex h-[64px] items-center gap-4 px-5 lg:px-7">
+
+              {/* Mobile burger */}
+              <button
+                type="button"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900 lg:hidden"
                 onClick={toggleMobile}
                 aria-label="Open navigation"
                 aria-expanded={mobileOpen}
               >
-                <Menu className="h-5 w-5" />
-              </Button>
+                <Menu className="h-4 w-4" />
+              </button>
 
+              {/* Page identity */}
               <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                  <span>Admin</span>
-                  <ChevronRight className="h-3 w-3 opacity-60" />
-                  <span className="text-foreground/80">{segment ?? title}</span>
-                </div>
-                <div className="flex flex-wrap items-baseline gap-3">
-                  <h1 className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-                    {title}
-                  </h1>
-                  {description && (
-                    <span className="hidden text-sm text-muted-foreground md:inline">
-                      {description}
-                    </span>
-                  )}
-                </div>
-                {description && (
-                  <p className="mt-0.5 text-sm text-muted-foreground md:hidden">
-                    {description}
-                  </p>
-                )}
+                {/* Breadcrumb */}
+                <nav aria-label="breadcrumb" className="flex items-center gap-1">
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">
+                    Admin
+                  </span>
+                  <ChevronRight className="h-3 w-3 text-slate-300" />
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-[hsl(330_75%_45%)]">
+                    {segment ?? title}
+                  </span>
+                </nav>
+                {/* Page title */}
+                <h1 className="font-serif text-xl font-semibold leading-tight text-slate-900 md:text-2xl">
+                  {title}
+                </h1>
               </div>
 
-              <div className="hidden shrink-0 items-center gap-3 sm:flex">
-                <div className="rounded-lg border border-border/80 bg-muted/50 px-3 py-1.5 text-right">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    Today
-                  </p>
-                  <p className="text-sm font-medium tabular-nums text-foreground">
+              {/* Right slot */}
+              <div className="hidden shrink-0 items-center gap-2.5 sm:flex">
+                {/* Date chip */}
+                <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
                     {todayLabel}
-                  </p>
+                  </span>
                 </div>
+
+                {/* Bell icon */}
+                <button
+                  type="button"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
+                  aria-label="Notifications"
+                >
+                  <Bell className="h-4 w-4" />
+                </button>
+
+                {/* Injected page actions */}
                 {headerActions}
               </div>
             </div>
 
-            {/* Mobile header actions */}
-            <div className="flex items-center justify-end gap-2 border-t border-border/40 px-4 py-2 sm:hidden">
-              {headerActions}
-            </div>
+            {/* Mobile action row */}
+            {headerActions && (
+              <div className="flex items-center justify-end gap-2 border-t border-slate-100 px-5 py-2 sm:hidden">
+                {headerActions}
+              </div>
+            )}
 
+            {/* Toolbar strip */}
             {toolbar && (
               <>
                 <Separator />
-                <div className="bg-card/50 px-4 py-3 lg:px-8">{toolbar}</div>
+                <div className="bg-white px-5 py-3 lg:px-7">{toolbar}</div>
               </>
             )}
           </header>
 
+          {/* ── Page content (scrollable) ─────────────────────── */}
           <main
             className={cn(
-              "flex-1 overflow-y-auto px-4 py-6 lg:px-8 lg:py-8",
+              "flex-1 overflow-y-auto px-5 py-6 lg:px-7 lg:py-8",
               contentClassName
             )}
           >

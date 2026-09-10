@@ -24,15 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
 import { useToast } from "@/hooks/use-toast";
 
 type BlogStatus = "draft" | "published" | "archived";
@@ -244,79 +235,72 @@ export const Blog = () => {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/30 hover:bg-muted/30">
-              <TableHead className="w-12">#</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead className="max-w-[320px]">Excerpt</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredBlogPosts.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="py-16 text-center text-muted-foreground">
-                  {searchTerm || statusFilter !== "all"
-                    ? "No posts match your filters."
-                    : "No blog posts yet."}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredBlogPosts.map((post, index) => (
-                <TableRow key={post.id}>
-                  <TableCell className="font-medium text-muted-foreground">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell>
-                    <div className="min-w-[180px]">
-                      <div className="font-medium text-foreground">{post.title}</div>
-                      <div className="mt-0.5 text-xs text-muted-foreground">
-                        /{post.slug}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="max-w-[320px]">
-                    <p className="truncate text-sm text-muted-foreground">{post.excerpt}</p>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={getBlogPostStatusColor(post.status)}>
-                      {getBlogPostStatusLabel(post.status)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+      {filteredBlogPosts.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-200 bg-white/60 py-16 text-center text-slate-500">
+          {searchTerm || statusFilter !== "all"
+            ? "No posts match your filters."
+            : "No blog posts yet."}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {filteredBlogPosts.map((post) => (
+            <article
+              key={post.id}
+              className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,23,42,0.18)]"
+            >
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="aspect-[16/9] bg-slate-100">
+                {post.image_url ? (
+                  <img
+                    src={post.image_url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-wider text-slate-400">
+                    No image
+                  </div>
+                )}
+              </div>
+              <div className="p-5">
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <Badge className={getBlogPostStatusColor(post.status)}>
+                    {getBlogPostStatusLabel(post.status)}
+                  </Badge>
+                  <span className="text-xs text-slate-400">
                     {format(new Date(post.created_at), "MMM d, yyyy")}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openEdit(post)}
-                        aria-label={`Edit ${post.title}`}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-destructive hover:text-destructive"
-                        onClick={() => handleDelete(post.id)}
-                        aria-label={`Delete ${post.title}`}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                  </span>
+                </div>
+                <h3 className="font-serif text-lg font-semibold leading-snug text-slate-900">
+                  {post.title}
+                </h3>
+                <p className="mt-2 line-clamp-2 text-sm text-slate-500">
+                  {post.excerpt || "No excerpt"}
+                </p>
+                <div className="mt-4 flex justify-end gap-1.5">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => openEdit(post)}
+                    aria-label={`Edit ${post.title}`}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => handleDelete(post.id)}
+                    aria-label={`Delete ${post.title}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-3xl">

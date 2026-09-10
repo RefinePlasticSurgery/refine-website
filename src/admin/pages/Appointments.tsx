@@ -53,10 +53,10 @@ export const Appointments = () => {
 
   const filteredAppointments = appointments.filter((appointment) => {
     const matchesSearch =
-      appointment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appointment.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appointment.phone.includes(searchTerm) ||
-      appointment.procedure.toLowerCase().includes(searchTerm.toLowerCase());
+      (appointment.name ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (appointment.email ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (appointment.phone ?? "").includes(searchTerm) ||
+      (appointment.procedure ?? "").toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "all" || appointment.status === statusFilter;
@@ -135,19 +135,19 @@ export const Appointments = () => {
           </>
         }
         toolbar={
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <div className="flex flex-col gap-3 rounded-full border border-slate-200 bg-slate-50/80 p-1.5 md:flex-row md:items-center">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
                 placeholder="Search by name, email, phone, procedure…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="h-10 rounded-full border-0 bg-white pl-10 shadow-none focus-visible:ring-1 focus-visible:ring-primary/30"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 px-1">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[160px]">
+                <SelectTrigger className="h-10 w-[160px] rounded-full border-slate-200 bg-white">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -158,7 +158,7 @@ export const Appointments = () => {
                   <SelectItem value="cancelled">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="icon" type="button" aria-label="Filters">
+              <Button variant="outline" size="icon" type="button" aria-label="Filters" className="h-10 w-10 rounded-full">
                 <Filter className="h-4 w-4" />
               </Button>
             </div>
@@ -171,16 +171,17 @@ export const Appointments = () => {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm">
+          <div className="max-h-[calc(100vh-320px)] overflow-auto">
           <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/30 hover:bg-muted/30">
+            <TableHeader className="sticky top-0 z-10 bg-white/95 backdrop-blur">
+              <TableRow className="hover:bg-transparent">
                 <TableHead className="w-12 min-w-12">#</TableHead>
                 <TableHead className="min-w-40">Patient</TableHead>
                 <TableHead className="min-w-48">Contact</TableHead>
                 <TableHead className="min-w-44">Procedure</TableHead>
                 <TableHead className="min-w-32">Preferred date</TableHead>
-                <TableHead className="min-w-24">Status</TableHead>
+                <TableHead className="min-w-28">Status</TableHead>
                 <TableHead className="min-w-20 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -198,7 +199,10 @@ export const Appointments = () => {
                 </TableRow>
               ) : (
                 paginatedAppointments.map((appointment, index) => (
-                  <TableRow key={appointment.id} className="group">
+                  <TableRow
+                    key={appointment.id}
+                    className="group even:bg-slate-50/40 hover:bg-primary/[0.04] hover:shadow-[inset_3px_0_0_hsl(330_75%_45%/0.55)]"
+                  >
                     <TableCell className="font-medium text-muted-foreground">
                       {startIndex + index + 1}
                     </TableCell>
@@ -231,7 +235,7 @@ export const Appointments = () => {
                         : "Flexible"}
                     </TableCell>
                     <TableCell>
-                      <Badge className={getAppointmentStatusColor(appointment.status)}>
+                      <Badge className={`${getAppointmentStatusColor(appointment.status)} px-3 py-1`}>
                         {getAppointmentStatusLabel(appointment.status)}
                       </Badge>
                     </TableCell>
@@ -255,6 +259,7 @@ export const Appointments = () => {
               )}
             </TableBody>
           </Table>
+          </div>
         </div>
 
         {totalPages > 1 && (
@@ -288,7 +293,7 @@ export const Appointments = () => {
                       variant={currentPage === page ? "default" : "outline"}
                       size="sm"
                       onClick={() => setCurrentPage(page)}
-                      className="h-8 w-8 p-0"
+                      className="h-8 w-8 rounded-full p-0"
                     >
                       {page}
                     </Button>

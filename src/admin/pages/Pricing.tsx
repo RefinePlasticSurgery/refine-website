@@ -93,15 +93,17 @@ export const Pricing = () => {
       }
     >
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-0 group-hover:opacity-100" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
             In view
           </p>
           <p className="mt-2 font-serif text-3xl font-bold">{filteredPricing.length}</p>
-          <p className="mt-1 text-xs text-muted-foreground">of {pricingData.length} procedures</p>
+          <p className="mt-1 text-xs text-slate-500">of {pricingData.length} procedures</p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
             Average
           </p>
           <p className="mt-2 font-serif text-2xl font-bold text-primary">
@@ -113,21 +115,23 @@ export const Pricing = () => {
               : "—"}
           </p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 group-hover:opacity-100" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
             Lowest
           </p>
-          <p className="mt-2 font-serif text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+          <p className="mt-2 font-serif text-2xl font-bold text-emerald-600">
             {filteredPricing.length > 0
               ? formatPrice(Math.min(...filteredPricing.map((item) => item.price)))
               : "—"}
           </p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-0 group-hover:opacity-100" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
             Highest
           </p>
-          <p className="mt-2 font-serif text-2xl font-bold text-rose-600 dark:text-rose-400">
+          <p className="mt-2 font-serif text-2xl font-bold text-rose-600">
             {filteredPricing.length > 0
               ? formatPrice(Math.max(...filteredPricing.map((item) => item.price)))
               : "—"}
@@ -135,7 +139,7 @@ export const Pricing = () => {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm">
         {filteredPricing.length > 0 ? (
           <div className="overflow-x-auto">
             <Table>
@@ -149,7 +153,7 @@ export const Pricing = () => {
               </TableHeader>
               <TableBody>
                 {filteredPricing.map((procedure: PricingItem) => (
-                  <TableRow key={procedure.id} className="hover:bg-muted/20">
+                  <TableRow key={procedure.id} className="hover:bg-primary/[0.03]">
                     <TableCell>
                       <p className="font-medium">{procedure.name}</p>
                       {procedure.description && (

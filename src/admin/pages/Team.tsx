@@ -182,68 +182,62 @@ export const Team = () => {
             filteredMembers.map((member) => (
               <div
                 key={member.id}
-                className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition hover:shadow-md"
+                className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,23,42,0.16)]"
               >
-                <div className="relative flex aspect-square items-center justify-center bg-muted">
-                  {member.image_url ? (
-                    <img
-                      src={member.image_url}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-16 w-16 text-muted-foreground/50" />
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="font-serif text-lg font-semibold text-foreground">{member.name}</h3>
-                  <p className="text-sm font-medium text-primary">{member.role}</p>
-
-                  {member.qualifications && (
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">Qualifications:</span>{" "}
-                      {member.qualifications}
-                    </p>
-                  )}
-
-                  {member.specialties && member.specialties.length > 0 && (
-                    <div className="mt-3">
-                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        Specialties
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {member.specialties.map((specialty, index) => (
-                          <Badge key={index} variant="secondary">
-                            {specialty}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {member.bio && (
-                    <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{member.bio}</p>
-                  )}
-
-                  <div className="mt-4 flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleOpenDialog(member)}
-                    >
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      type="button"
-                      onClick={() => handleDelete(member.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="flex items-start gap-4">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500/10 ring-2 ring-white shadow-sm">
+                    {member.image_url ? (
+                      <img
+                        src={member.image_url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <User className="h-7 w-7 text-violet-500" />
+                    )}
                   </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-serif text-lg font-semibold text-slate-900">{member.name}</h3>
+                    <p className="text-sm font-medium text-primary">{member.role}</p>
+                    {member.qualifications && (
+                      <p className="mt-1 text-xs text-slate-500">{member.qualifications}</p>
+                    )}
+                  </div>
+                </div>
+
+                {member.specialties && member.specialties.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {member.specialties.map((specialty, index) => (
+                      <Badge key={index} variant="secondary" className="rounded-full">
+                        {specialty}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {member.bio && (
+                  <p className="mt-3 line-clamp-3 text-sm text-slate-500">{member.bio}</p>
+                )}
+
+                <div className="mt-4 flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handleOpenDialog(member)}
+                  >
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    type="button"
+                    onClick={() => handleDelete(member.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             ))

@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { BlogPost, NewBlogPost, UpdateBlogPost } from '@/integrations/supabase/types';
 import { queryKeys } from '@/lib/query-keys';
+import { handleSupabaseDatabaseError } from '@/lib/errors';
 
 // ─── Slug generator ───────────────────────────────────────────────────────────
 
@@ -19,7 +20,7 @@ async function fetchBlogPosts(): Promise<BlogPost[]> {
     .from('blog_posts')
     .select('*')
     .order('created_at', { ascending: false });
-  if (error) throw error;
+  if (error) throw handleSupabaseDatabaseError(error);
   return data ?? [];
 }
 
@@ -49,7 +50,7 @@ export const useBlogPosts = () => {
         .insert(row)
         .select()
         .single();
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return data;
     },
     onSuccess: () => {
@@ -71,7 +72,7 @@ export const useBlogPosts = () => {
         .eq('id', id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return data;
     },
     onSuccess: (updated) => {
@@ -87,7 +88,7 @@ export const useBlogPosts = () => {
   const deleteMutation = useMutation({
     mutationFn: async (id: string): Promise<string> => {
       const { error } = await supabase.from('blog_posts').delete().eq('id', id);
-      if (error) throw error;
+      if (error) throw handleSupabaseDatabaseError(error);
       return id;
     },
     onSuccess: (deletedId) => {

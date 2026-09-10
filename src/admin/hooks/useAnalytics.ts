@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { Appointment } from '@/integrations/supabase/types';
 import { queryKeys } from '@/lib/query-keys';
+import { handleSupabaseDatabaseError } from '@/lib/errors';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,7 +42,9 @@ function processAppointmentData(appointments: Appointment[]): MonthlyRow[] {
   return MONTH_NAMES
     .map((month, index) => {
       const count = appointments.filter(a => {
+        if (!a.created_at) return false;
         const d = new Date(a.created_at);
+        if (Number.isNaN(d.getTime())) return false;
         return d.getMonth() === index && d.getFullYear() === currentYear;
       }).length;
       return { month, appointments: count, revenue: count * 2_000_000 };
@@ -52,7 +55,7 @@ function processAppointmentData(appointments: Appointment[]): MonthlyRow[] {
 function processProcedureData(appointments: Appointment[]) {
   const counts: Record<string, number> = {};
   appointments.forEach(a => {
-    const key = a.procedure || 'Other';
+    const key = a.procedure?.trim() || 'Other';
     counts[key] = (counts[key] ?? 0) + 1;
   });
   return Object.entries(counts).map(([name, value], i) => ({
@@ -81,9 +84,9 @@ async function fetchAnalyticsData(): Promise<AnalyticsData> {
   const { data: appointments, error } = await supabase
     .from('appointments')
     .select('id, procedure, status, created_at');
-  if (error) throw error;
+  if (error) throw handleSupabaseDatabaseError(error);
 
-  const appts = appointments ?? [];
+  const appts = (appointments ?? []).filter((a) => Boolean(a.created_at));
   const appointmentData = processAppointmentData(appts as Appointment[]);
   const procedureData = processProcedureData(appts as Appointment[]);
   const statusData = processStatusData(appts as Appointment[]);
